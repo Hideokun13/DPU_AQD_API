@@ -47,7 +47,14 @@ public class DeviceController : ControllerBase
             try{
                 while (reader.Read())
                 {
-                    count++;
+                    DeviceResponse deviceResponse = new DeviceResponse();
+                    deviceResponse.DeviceName = reader["deviceName"].ToString();
+                    if(deviceResponse.DeviceName == _DeviceName){
+                        await connection.CloseAsync();
+                        return BadRequest($"Device ID: '{_DeviceName}' is already exist");
+                    }
+                    else
+                        count++;
                 }
             } catch (MySqlException ex){
                 throw;
