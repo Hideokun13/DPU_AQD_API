@@ -1,0 +1,85 @@
+using System;
+using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;
+
+namespace DPU_AQD_API;
+[ApiController]
+[Route("controller")]
+public class DeviceController : ControllerBase
+{
+    [HttpGet("getDevice")]
+    public async Task<IActionResult> getDevice () 
+    {
+        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDevice"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
+            while(reader.Read()){
+                DeviceResponse deviceResponse = new DeviceResponse();
+                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                deviceResponse.DeviceName = reader["deviceName"].ToString();
+                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponses.Add(deviceResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(deviceResponses);
+        }
+    }
+
+    [HttpPost("registerDevice")]
+    public async Task<IActionResult> registerDevice (string _DeviceName) {
+        int count = 1;
+        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True"))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDevice";
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            try{
+                while (reader.Read())
+                {
+                    count++;
+                }
+            } catch (MySqlException ex){
+                throw;
+            }
+            await connection.CloseAsync();
+        }
+
+        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "registerDevice"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
+            cmd.Parameters.Add("_DeviceName", MySqlDbType.VarChar).Value = _DeviceName;
+            cmd.Parameters.Add("_Isinstalled", MySqlDbType.VarChar).Value = "T";
+            cmd.Parameters.Add("_RegisterDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
+            while(reader.Read()){
+                DeviceResponse deviceResponse = new DeviceResponse();
+                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                deviceResponse.DeviceName = reader["deviceName"].ToString();
+                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponses.Add(deviceResponse);
+            }
+
+            await connection.CloseAsync();
+            return Ok(deviceResponses);
+        }
+    }
+}
