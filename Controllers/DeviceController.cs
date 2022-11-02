@@ -115,7 +115,7 @@ public class DeviceController : ControllerBase
             return Ok(deviceResponses);
         }
     }
-    [HttpPut("isInstalled")]
+    [HttpPost("isInstalled")]
     public async Task<IActionResult> SetIsinstalled (int _DeviceID, string _Isinstalled) 
     {
         using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
