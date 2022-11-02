@@ -8,7 +8,7 @@ namespace DPU_AQD_API;
 public class DeviceController : ControllerBase
 {
     [HttpGet("getDevice")]
-    public async Task<IActionResult> getDevice () 
+    public async Task<IActionResult> GetDevice () 
     {
         using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
             MySqlCommand cmd = new MySqlCommand();
@@ -33,7 +33,7 @@ public class DeviceController : ControllerBase
     }
 
     [HttpPost("registerDevice")]
-    public async Task<IActionResult> registerDevice (string _DeviceName) {
+    public async Task<IActionResult> RegisterDevice (string _DeviceName) {
         int count = 1;
         using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True"))
         {
@@ -67,11 +67,11 @@ public class DeviceController : ControllerBase
             cmd.Connection = connection;
             cmd.CommandText = "registerDevice"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
             cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
             cmd.Parameters.Add("_DeviceName", MySqlDbType.VarChar).Value = _DeviceName;
             cmd.Parameters.Add("_Isinstalled", MySqlDbType.VarChar).Value = "T";
             cmd.Parameters.Add("_RegisterDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
+            
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
