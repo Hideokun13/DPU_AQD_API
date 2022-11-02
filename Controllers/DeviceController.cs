@@ -32,6 +32,32 @@ public class DeviceController : ControllerBase
         }
     }
 
+    [HttpGet("getDeviceByID")]
+    public async Task<IActionResult> GetDeviceByID (int _DeviceID) 
+    {
+        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDeviceByID"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _DeviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
+            while(reader.Read()){
+                DeviceResponse deviceResponse = new DeviceResponse();
+                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                deviceResponse.DeviceName = reader["deviceName"].ToString();
+                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponses.Add(deviceResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(deviceResponses);
+        }
+    }
+
     [HttpPost("registerDevice")]
     public async Task<IActionResult> RegisterDevice (string _DeviceName) {
         int count = 1;
@@ -85,6 +111,32 @@ public class DeviceController : ControllerBase
                 deviceResponses.Add(deviceResponse);
             }
 
+            await connection.CloseAsync();
+            return Ok(deviceResponses);
+        }
+    }
+    [HttpPut("isInstalled")]
+    public async Task<IActionResult> SetIsinstalled (int _DeviceID, string _Isinstalled) 
+    {
+        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "updateIsinstalled"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _DeviceID;
+            cmd.Parameters.Add("_Isinstalled", MySqlDbType.VarChar).Value = _Isinstalled;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
+            while(reader.Read()){
+                DeviceResponse deviceResponse = new DeviceResponse();
+                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                deviceResponse.DeviceName = reader["deviceName"].ToString();
+                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponses.Add(deviceResponse);
+            }
             await connection.CloseAsync();
             return Ok(deviceResponses);
         }
