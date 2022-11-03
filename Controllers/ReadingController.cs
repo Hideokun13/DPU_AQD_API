@@ -4,7 +4,7 @@ using MySql.Data.MySqlClient;
 
 namespace DPU_AQD_API;
 [ApiController]
-[Route("controller")]
+[Route("hardware")]
 public class ReadingController : ControllerBase
 {
     [HttpGet("getReadData")]
