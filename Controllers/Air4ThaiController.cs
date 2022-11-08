@@ -11,9 +11,10 @@ namespace DPU_AQD_API;
 [Route("webapi")]
 public class Air4ThaiController : ControllerBase
 {
-    
+
     [HttpGet("GetWeatherAPI")]
-    public async Task<IActionResult> GetWeatherAPI(){
+    public async Task<IActionResult> GetWeatherAPI()
+    {
 
         using HttpClient client = new();
         client.DefaultRequestHeaders.Accept.Clear();
@@ -24,7 +25,7 @@ public class Air4ThaiController : ControllerBase
         var endpoint = new Uri("http://air4thai.pcd.go.th/services/getNewAQI_JSON.php");
         var result = client.GetAsync(endpoint).Result;
         var json = result.Content.ReadAsStringAsync().Result;
-
+        
         return Ok(json);
     }
     [HttpGet("GetWeatherAPIByID")]
