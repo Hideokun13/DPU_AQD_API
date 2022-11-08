@@ -1,4 +1,5 @@
 using System;
+using DPU_AQD_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
 

@@ -1,5 +1,5 @@
 using System;
-namespace DPU_AQD_API;
+namespace DPU_AQD_API.Models;
 
 public class ReadingResponse
 {
