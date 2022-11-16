@@ -8,10 +8,11 @@ namespace DPU_AQD_API;
 [Route("hardware")]
 public class DeviceController : ControllerBase
 {
+    private SQLConection sQLConection = new SQLConection();
     [HttpGet("getDevice")]
     public async Task<IActionResult> GetDevice () 
     {
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "getDevice"; //Store Procedure Name
@@ -36,7 +37,7 @@ public class DeviceController : ControllerBase
     [HttpGet("getDeviceByID")]
     public async Task<IActionResult> GetDeviceByID (int _DeviceID) 
     {
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "getDeviceByID"; //Store Procedure Name
@@ -62,7 +63,7 @@ public class DeviceController : ControllerBase
     [HttpPost("registerDevice")]
     public async Task<IActionResult> RegisterDevice (string _DeviceName) {
         int count = 1;
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True"))
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
@@ -89,7 +90,7 @@ public class DeviceController : ControllerBase
             await connection.CloseAsync();
         }
 
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "registerDevice"; //Store Procedure Name
@@ -119,7 +120,7 @@ public class DeviceController : ControllerBase
     [HttpPost("isInstalled")]
     public async Task<IActionResult> SetIsinstalled (int _DeviceID, string _Isinstalled) 
     {
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "updateIsinstalled"; //Store Procedure Name

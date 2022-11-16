@@ -8,10 +8,11 @@ namespace DPU_AQD_API;
 [Route("hardware")]
 public class ReadingController : ControllerBase
 {
+    private SQLConection sQLConection = new SQLConection();
     [HttpGet("getReadData")]
     public async Task<IActionResult> GetReadData () 
     {
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "getReadData"; //Store Procedure Name
@@ -41,7 +42,7 @@ public class ReadingController : ControllerBase
     [HttpPost("SentReadData")]
     public async Task<IActionResult> RegisterDevice (int _Temp, int _Humidity, int _VOC, int _PM2_5, int _PM_10, string _DeviceID) {
         int count = 1;
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True"))
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
@@ -61,7 +62,7 @@ public class ReadingController : ControllerBase
             await connection.CloseAsync();
         }
 
-        using (MySqlConnection connection = new MySqlConnection("server=dpu-aqd-db.cea8uizk3jzd.ap-southeast-1.rds.amazonaws.com;port=3306;user=admin;password=admin1234!;database=DPU_AQD_DB;Convert Zero Datetime=True")){
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "sentReadData"; //Store Procedure Name
