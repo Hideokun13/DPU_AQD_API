@@ -40,7 +40,7 @@ public class ReadingController : ControllerBase
     }
 
     [HttpPost("SentReadData")]
-    public async Task<IActionResult> RegisterDevice (int _Temp, int _Humidity, int _VOC, int _PM2_5, int _PM_10, string _DeviceID) {
+    public async Task<IActionResult> SentReadData (int Temp, int Humidity, int VOC, int PM2_5, int PM_10, string DeviceID) {
         int count = 1;
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
@@ -69,12 +69,12 @@ public class ReadingController : ControllerBase
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add("_ReadingID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
             cmd.Parameters.Add("_Timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
-            cmd.Parameters.Add("_Temp", MySqlDbType.Int32).Value = _Temp;
-            cmd.Parameters.Add("_Humidity", MySqlDbType.Int32).Value = _Humidity;
-            cmd.Parameters.Add("_VOC", MySqlDbType.Int32).Value = _VOC;
-            cmd.Parameters.Add("_PM2_5", MySqlDbType.Int32).Value = _PM2_5;
-            cmd.Parameters.Add("_PM_10", MySqlDbType.Int32).Value = _PM_10;
-            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _DeviceID;
+            cmd.Parameters.Add("_Temp", MySqlDbType.Int32).Value = Temp;
+            cmd.Parameters.Add("_Humidity", MySqlDbType.Int32).Value = Humidity;
+            cmd.Parameters.Add("_VOC", MySqlDbType.Int32).Value = VOC;
+            cmd.Parameters.Add("_PM2_5", MySqlDbType.Int32).Value = PM2_5;
+            cmd.Parameters.Add("_PM_10", MySqlDbType.Int32).Value = PM_10;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
             
             await connection.OpenAsync();
 
