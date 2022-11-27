@@ -39,7 +39,7 @@ public class ReadingController : ControllerBase
         }
     }
 
-    [HttpPost("SentReadData")]
+    [HttpGet("SentReadData")]
     public async Task<IActionResult> SentReadData (int Temp, int Humidity, int VOC, int PM2_5, int PM_10, int DeviceID) {
         int count = 1;
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
