@@ -38,6 +38,36 @@ public class ReadingController : ControllerBase
             return Ok(readingResponses);
         }
     }
+    [HttpGet("getReadDataByDeviceID")]
+    public async Task<IActionResult> GetReadDataByDeviceID (int DeviceID) 
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getReadDataByDeviceID"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReadingResponse> readingResponses = new List<ReadingResponse>();
+            while(reader.Read()){
+                ReadingResponse readingResponse = new ReadingResponse();
+                readingResponse.ReadingID = Convert.ToInt32(reader["ReadingID"]);
+                readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
+                readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
+                readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
+                readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
+                readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+
+                readingResponses.Add(readingResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(readingResponses);
+        }
+    }
 
     [HttpGet("SentReadData")]
     public async Task<IActionResult> SentReadData (int Temp, int Humidity, int VOC, int PM2_5, int PM_10, int DeviceID) {
