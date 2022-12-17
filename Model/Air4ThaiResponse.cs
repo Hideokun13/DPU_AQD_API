@@ -60,45 +60,30 @@ namespace DPU_AQD_API.Models
     {
         [JsonProperty("value")]
         public string Value;
-
-        [JsonProperty("unit")]
-        public string Unit;
     }
 
     public class O3
     {
         [JsonProperty("value")]
         public string Value;
-
-        [JsonProperty("unit")]
-        public string Unit;
     }
 
     public class PM10
     {
         [JsonProperty("value")]
         public string Value;
-
-        [JsonProperty("unit")]
-        public string Unit;
     }
 
     public class PM25
     {
         [JsonProperty("value")]
         public string Value;
-
-        [JsonProperty("unit")]
-        public string Unit;
     }
 
     public class SO2
     {
         [JsonProperty("value")]
         public string Value;
-
-        [JsonProperty("unit")]
-        public string Unit;
     }
 
     public class Station
@@ -130,7 +115,7 @@ namespace DPU_AQD_API.Models
         [JsonProperty("forecast")]
         public List<object> Forecast;
 
-        [JsonProperty("LastUpdate")]
+        [JsonProperty("AQILast")]
         public LastUpdate LastUpdate;
     }
 }
