@@ -9,4 +9,6 @@ public class RoomResponse
     public int BuildingID {get; set;}
     public DateTime CreateDate {get; set;}
     public int AdminID {get; set;}
+    public DateTime LastUpdateDate {get; set;}
+    public int LastUpdateAdminID {get; set;}
 }

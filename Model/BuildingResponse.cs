@@ -8,4 +8,6 @@ public class BuildingResponse
     public DateTime CreateDate {get; set;}
     public char BuildingStatus {get; set;}
     public int AdminID {get; set;}
+    public DateTime LastUpdateDate {get; set;}
+    public int LastUpdateAdminID {get; set;}
 }
