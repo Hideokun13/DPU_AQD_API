@@ -5,7 +5,7 @@ using MySql.Data.MySqlClient;
 
 namespace DPU_AQD_API;
 [ApiController]
-[Route("hardware")]
+[Route("webapi")]
 public class DeviceController : ControllerBase
 {
     private SQLConection sQLConection = new SQLConection();
