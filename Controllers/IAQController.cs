@@ -40,7 +40,7 @@ public class IAQController : ControllerBase
         }
     }
     [HttpGet("CalculateIAQ")]
-    public async Task<IActionResult> CalculateIAQ()
+    public async Task<IActionResult> CalculateIAQ(int _deviceID)
     {
         double[] eqArr = new double [2];
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
@@ -49,6 +49,7 @@ public class IAQController : ControllerBase
             cmd.Connection = connection;
             cmd.CommandText = "getAVG_Eq"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
