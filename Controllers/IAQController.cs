@@ -83,6 +83,43 @@ public class IAQController : ControllerBase
             return Ok(iAQResponse);
         }
     }
+    public class CO2{
+        public int CO2_Value {get;set;}
+        public int CO2_Lv {get;set;}
+        public string CO2_Lv_Desc {get;set;}
+    }
+    [HttpGet("CalculateCO2")]
+    public async Task<IActionResult> CalculateCO2(int co2_input)
+    {   
+        List<CO2> co2_list = new List<CO2>();
+        CO2 co2_Item = new CO2();
+        string Lv_Desc = "";
+
+        co2_Item.CO2_Value = co2_input;
+        co2_Item.CO2_Lv = CO2Calculation(co2_input);
+
+        if(co2_Item.CO2_Lv == 1){
+            Lv_Desc = "Normal";
+        }
+        else if (co2_Item.CO2_Lv == 2)
+        {
+            Lv_Desc = "Affecting to Concentration";
+        }
+        else if (co2_Item.CO2_Lv == 3)
+        {
+            Lv_Desc = "Risk to health";
+        }
+        else if (co2_Item.CO2_Lv == 4)
+        {
+            Lv_Desc = "Harmful to health";
+        }
+        co2_Item.CO2_Lv_Desc = Lv_Desc;
+
+        co2_list.Add(co2_Item);
+
+        return Ok(co2_list);
+    }
+
     private int[] FindMaxEq(double[] input){
         double maxEq = input[0];
         int eqIndex = 0;
@@ -196,5 +233,22 @@ public class IAQController : ControllerBase
     }
     private int IAQCalculation(int x, int min_x, int max_x, int min_i, int max_i){
         return (int)(((float)(max_i - min_i) / (max_x - min_x)) * (x - min_x) + min_i);
+    }
+    private int CO2Calculation(int co2_ppm){
+        int result_Lv;
+        if(co2_ppm < 1000) {
+            result_Lv = 1; //Normal
+        }
+        else if(co2_ppm < 1500){
+            result_Lv = 2; //Affecting to Concentration
+        }
+        else if(co2_ppm < 5000){
+            result_Lv = 3; //Risk to health
+        }
+        else {
+            result_Lv = 4; //Harmful to health
+        }
+        
+        return result_Lv;
     }
 }
