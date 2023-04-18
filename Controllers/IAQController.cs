@@ -40,9 +40,11 @@ public class IAQController : ControllerBase
         }
     }
     [HttpGet("CalculateIAQ")]
-    public async Task<IActionResult> CalculateIAQ(int _deviceID)
+    public async Task<IActionResult> CalculateIAQ(int _deviceID, string _startDate, string _endDate)
     {
         double[] eqArr = new double [2];
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
@@ -50,6 +52,8 @@ public class IAQController : ControllerBase
             cmd.CommandText = "getAVG_Eq"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
