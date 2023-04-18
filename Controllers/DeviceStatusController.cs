@@ -36,6 +36,34 @@ public class DeviceStatusController : ControllerBase
             return Ok(DeviceStatusResponses);
         }
     }
+    [HttpGet("getStatusDataByID")]
+    public async Task<IActionResult> GetStatusDataByID(int deviceID)
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getStatusDataByID"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = deviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceStatusResponse> DeviceStatusResponses = new List<DeviceStatusResponse>();
+            while (reader.Read())
+            {
+                DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
+                DeviceStatusResponse.StatusID = Convert.ToInt32(reader["StatusID"]);
+                DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
+
+                DeviceStatusResponses.Add(DeviceStatusResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(DeviceStatusResponses);
+        }
+    }
     [HttpGet("SentStatusData")]
     public async Task<IActionResult> SentStatusData (int DeviceID, string Sensor_status) {
         int count = 1;
