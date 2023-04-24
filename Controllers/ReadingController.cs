@@ -98,6 +98,40 @@ public class ReadingController : ControllerBase
             return Ok(readingResponses);
         }
     }
+    [HttpGet("getHoursData")]
+    public async Task<IActionResult> getHoursData (int _deviceID, string _startDate, string _endDate) 
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDataHours"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<HoursDataResponse> hoursDataResponses = new List<HoursDataResponse>();
+            while(reader.Read()){
+                HoursDataResponse hoursDataResponse = new HoursDataResponse();
+                hoursDataResponse.Hours_Timestamp = DateTime.Parse(reader["hours"].ToString());
+                hoursDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                hoursDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                hoursDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                hoursDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                hoursDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+
+                hoursDataResponses.Add(hoursDataResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(hoursDataResponses);
+        }
+    }
 
     [HttpGet("SentReadData")]
     public async Task<IActionResult> SentReadData (int Temp, int Humidity, int VOC, int PM2_5, int PM_10, int DeviceID) {
