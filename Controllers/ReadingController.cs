@@ -132,9 +132,38 @@ public class ReadingController : ControllerBase
             return Ok(reportDataResponses);
         }
     }
+    [HttpGet("getWeeklyData")]
+    public async Task<IActionResult> getWeeklyData (int _deviceID, string _startDate, string _endDate) 
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDataWeekly"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            while(reader.Read()){
+                ReportDataResponse reportDataResponse  = new ReportDataResponse();
+                reportDataResponse.Timestamp = (reader["days"].ToString());
+                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+
+                reportDataResponses.Add(reportDataResponse);
             }
             await connection.CloseAsync();
-            return Ok(hoursDataResponses);
+            return Ok(reportDataResponses);
         }
     }
 
