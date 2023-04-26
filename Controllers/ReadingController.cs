@@ -116,17 +116,22 @@ public class ReadingController : ControllerBase
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
-            List<HoursDataResponse> hoursDataResponses = new List<HoursDataResponse>();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
             while(reader.Read()){
-                HoursDataResponse hoursDataResponse = new HoursDataResponse();
-                hoursDataResponse.Hours_Timestamp = DateTime.Parse(reader["hours"].ToString());
-                hoursDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                hoursDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                hoursDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                hoursDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                hoursDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                ReportDataResponse reportDataResponse = new ReportDataResponse();
+                reportDataResponse.Timestamp = (reader["hours"].ToString());
+                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                hoursDataResponses.Add(hoursDataResponse);
+                reportDataResponses.Add(reportDataResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(reportDataResponses);
+        }
+    }
             }
             await connection.CloseAsync();
             return Ok(hoursDataResponses);
