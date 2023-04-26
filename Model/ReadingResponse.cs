@@ -10,5 +10,7 @@ public class ReadingResponse
     public int VOC {get; set;}
     public int PM2_5 {get; set;}
     public int PM_10 {get; set;}
-    public int DeviceID {get; set;}    
+    public int DeviceID {get; set;} 
+
+    public DateTime Hours_Timestamp {get; set;}   
 }
