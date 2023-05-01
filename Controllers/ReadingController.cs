@@ -262,4 +262,51 @@ public class ReadingController : ControllerBase
             return Ok(readingResponses);
         }
     }
+    [HttpGet("exportReadData")]
+    public async Task<IActionResult> exportReadData (int _deviceID, string _startDate, string _endDate, string requestType) 
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+        string timestampType = "days";
+        string csv = "";
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            if(requestType == "Hours")
+            {
+                cmd.CommandText = "getDataHours";
+                timestampType = "hours";
+            }
+            else if (requestType == "Weekly")
+            {
+                cmd.CommandText = "getDataWeekly";
+            }
+            else if (requestType == "Monthly")
+            {
+                cmd.CommandText = "getDataHours";
+            }
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            csv += timestampType + "," + "avg(Temp)" + "," + "avg(Humidity)" + "," + "avg(VOC)" + "," + "avg(PM2_5)" + "," + "avg(PM_10)" + "\n";
+            while (reader.Read()){
+                
+                csv += reader[timestampType].ToString() + "," + reader["avg(Temp)"].ToString() + "," + reader["avg(Humidity)"].ToString() + "," + reader["avg(VOC)"].ToString() + "," + reader["avg(PM2_5)"].ToString() + "," + reader["avg(PM_10)"].ToString() + "\n";
+
+            }
+            await connection.CloseAsync();
+
+            byte[] fileBytes = Encoding.UTF8.GetBytes(csv);
+            string fileName = _deviceID.ToString() + "_" + _startDate.ToString() + "_" + _endDate.ToString();
+
+            return File(fileBytes, "text/csv", fileName);
+        }
+    }
 }
