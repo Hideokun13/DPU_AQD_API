@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using DPU_AQD_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
@@ -153,6 +154,42 @@ public class ReadingController : ControllerBase
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
             while(reader.Read()){
                 ReportDataResponse reportDataResponse  = new ReportDataResponse();
+                reportDataResponse.Timestamp = (reader["days"].ToString());
+                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+
+                reportDataResponses.Add(reportDataResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(reportDataResponses);
+        }
+    }
+    [HttpGet("getMonthlyData")]
+    public async Task<IActionResult> getMonthlyData(int _deviceID, string _startDate, string _endDate)
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDataMonthly"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            while (reader.Read())
+            {
+                ReportDataResponse reportDataResponse = new ReportDataResponse();
                 reportDataResponse.Timestamp = (reader["days"].ToString());
                 reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                 reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
