@@ -27,6 +27,8 @@ public class DeviceController : ControllerBase
                 deviceResponse.DeviceName = reader["deviceName"].ToString();
                 deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
                 deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
                 deviceResponses.Add(deviceResponse);
             }
             await connection.CloseAsync();
@@ -53,6 +55,8 @@ public class DeviceController : ControllerBase
                 deviceResponse.DeviceName = reader["deviceName"].ToString();
                 deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
                 deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
                 deviceResponses.Add(deviceResponse);
             }
             await connection.CloseAsync();
@@ -61,7 +65,7 @@ public class DeviceController : ControllerBase
     }
 
     [HttpPost("registerDevice")]
-    public async Task<IActionResult> RegisterDevice (string DeviceName) {
+    public async Task<IActionResult> RegisterDevice (string deviceName, int buildingID, int roomID) {
         int count = 1;
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
@@ -77,9 +81,9 @@ public class DeviceController : ControllerBase
                 {
                     DeviceResponse deviceResponse = new DeviceResponse();
                     deviceResponse.DeviceName = reader["deviceName"].ToString();
-                    if(deviceResponse.DeviceName == DeviceName){
+                    if(deviceResponse.DeviceName == deviceName){
                         await connection.CloseAsync();
-                        return BadRequest($"Device ID: '{DeviceName}' is already exist");
+                        return BadRequest($"Device ID: '{deviceName}' is already exist");
                     }
                     else
                         count++;
@@ -96,10 +100,11 @@ public class DeviceController : ControllerBase
             cmd.CommandText = "registerDevice"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
-            cmd.Parameters.Add("_DeviceName", MySqlDbType.VarChar).Value = DeviceName;
+            cmd.Parameters.Add("_DeviceName", MySqlDbType.VarChar).Value = deviceName;
             cmd.Parameters.Add("_Isinstalled", MySqlDbType.VarChar).Value = "T";
             cmd.Parameters.Add("_RegisterDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
-            
+            cmd.Parameters.Add("_BuildingID", MySqlDbType.Int32).Value = buildingID;
+            cmd.Parameters.Add("_RoomID", MySqlDbType.Int32).Value = roomID;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -110,6 +115,8 @@ public class DeviceController : ControllerBase
                 deviceResponse.DeviceName = reader["deviceName"].ToString();
                 deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
                 deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
                 deviceResponses.Add(deviceResponse);
             }
 
@@ -137,6 +144,8 @@ public class DeviceController : ControllerBase
                 deviceResponse.DeviceName = reader["deviceName"].ToString();
                 deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
                 deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
                 deviceResponses.Add(deviceResponse);
             }
             await connection.CloseAsync();
