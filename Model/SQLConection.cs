@@ -3,10 +3,10 @@ namespace DPU_AQD_API.Models;
 
 public class SQLConection
 {
-    private const string Endpoint = "ibestdk.3bbddns.com";
-    private const string Port = "53886";
+    private const string Endpoint = "119.59.96.90";
+    private const string Port = "3306";
     private const string DBUser = "aql_admin";
-    private const string DBPwd = "K7y%8l09j";
+    private const string DBPwd = "jgLu&9430";
     private const string DBName = "aql_db";
     private const string ConnectionOption = "Convert Zero Datetime=True";
 
