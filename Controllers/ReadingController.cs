@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using DPU_AQD_API.Models;
 using Microsoft.AspNetCore.Mvc;
 using MySql.Data.MySqlClient;
@@ -98,6 +99,110 @@ public class ReadingController : ControllerBase
             return Ok(readingResponses);
         }
     }
+    [HttpGet("getHoursData")]
+    public async Task<IActionResult> getHoursData (int _deviceID, string _startDate, string _endDate) 
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDataHours"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            while(reader.Read()){
+                ReportDataResponse reportDataResponse = new ReportDataResponse();
+                reportDataResponse.Timestamp = (reader["hours"].ToString());
+                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+
+                reportDataResponses.Add(reportDataResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(reportDataResponses);
+        }
+    }
+    [HttpGet("getWeeklyData")]
+    public async Task<IActionResult> getWeeklyData (int _deviceID, string _startDate, string _endDate) 
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDataWeekly"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            while(reader.Read()){
+                ReportDataResponse reportDataResponse  = new ReportDataResponse();
+                reportDataResponse.Timestamp = (reader["days"].ToString());
+                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+
+                reportDataResponses.Add(reportDataResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(reportDataResponses);
+        }
+    }
+    [HttpGet("getMonthlyData")]
+    public async Task<IActionResult> getMonthlyData(int _deviceID, string _startDate, string _endDate)
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDataMonthly"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            while (reader.Read())
+            {
+                ReportDataResponse reportDataResponse = new ReportDataResponse();
+                reportDataResponse.Timestamp = (reader["days"].ToString());
+                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+
+                reportDataResponses.Add(reportDataResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(reportDataResponses);
+        }
+    }
 
     [HttpGet("SentReadData")]
     public async Task<IActionResult> SentReadData (int Temp, int Humidity, int VOC, int PM2_5, int PM_10, int DeviceID) {
@@ -155,6 +260,53 @@ public class ReadingController : ControllerBase
             }
             await connection.CloseAsync();
             return Ok(readingResponses);
+        }
+    }
+    [HttpGet("exportReadData")]
+    public async Task<IActionResult> exportReadData (int _deviceID, string _startDate, string _endDate, string requestType) 
+    {
+        DateTime startDt = Convert.ToDateTime(_startDate);
+        DateTime endDt = Convert.ToDateTime(_endDate);
+        string timestampType = "days";
+        string csv = "";
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            if(requestType == "Hours")
+            {
+                cmd.CommandText = "getDataHours";
+                timestampType = "hours";
+            }
+            else if (requestType == "Weekly")
+            {
+                cmd.CommandText = "getDataWeekly";
+            }
+            else if (requestType == "Monthly")
+            {
+                cmd.CommandText = "getDataHours";
+            }
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
+            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
+            csv += timestampType + "," + "avg(Temp)" + "," + "avg(Humidity)" + "," + "avg(VOC)" + "," + "avg(PM2_5)" + "," + "avg(PM_10)" + "\n";
+            while (reader.Read()){
+                
+                csv += reader[timestampType].ToString() + "," + reader["avg(Temp)"].ToString() + "," + reader["avg(Humidity)"].ToString() + "," + reader["avg(VOC)"].ToString() + "," + reader["avg(PM2_5)"].ToString() + "," + reader["avg(PM_10)"].ToString() + "\n";
+
+            }
+            await connection.CloseAsync();
+
+            byte[] fileBytes = Encoding.UTF8.GetBytes(csv);
+            string fileName = _deviceID.ToString() + "_" + _startDate.ToString() + "_" + _endDate.ToString();
+
+            return File(fileBytes, "text/csv", fileName);
         }
     }
 }

@@ -7,4 +7,7 @@ public class DeviceResponse
     public string DeviceName {get; set;}
     public char Isinstalled {get; set;}
     public DateTime RegisterDate {get; set;}
+    public int BuildingID {get; set;}
+    public int RoomID {get; set;}
+
 }
