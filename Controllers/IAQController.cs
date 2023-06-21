@@ -88,172 +88,227 @@ public class IAQController : ControllerBase
             return Ok(iAQResponse);
         }
     }
-    public class CO2{
-        public int CO2_Value {get;set;}
-        public int CO2_Lv {get;set;}
-        public string CO2_Lv_Desc {get;set;}
+    public class CO2
+    {
+        public int CO2_Value { get; set; }
+        public int CO2_Lv { get; set; }
+        public string CO2_Lv_Desc { get; set; }
     }
     [HttpGet("CalculateCO2")]
-    public async Task<IActionResult> CalculateCO2(int co2_input)
-    {   
+    public async Task<IActionResult> CalculateCO2(int _deviceID)
+    {
         List<CO2> co2_list = new List<CO2>();
         CO2 co2_Item = new CO2();
         string Lv_Desc = "";
 
-        co2_Item.CO2_Value = co2_input;
-        co2_Item.CO2_Lv = CO2Calculation(co2_input);
-
-        if(co2_Item.CO2_Lv == 1){
-            Lv_Desc = "Normal";
-        }
-        else if (co2_Item.CO2_Lv == 2)
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
-            Lv_Desc = "Affecting to Concentration";
-        }
-        else if (co2_Item.CO2_Lv == 3)
-        {
-            Lv_Desc = "Risk to health";
-        }
-        else if (co2_Item.CO2_Lv == 4)
-        {
-            Lv_Desc = "Harmful to health";
-        }
-        co2_Item.CO2_Lv_Desc = Lv_Desc;
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getlatest_co2"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            await connection.OpenAsync();
 
-        co2_list.Add(co2_Item);
+            MySqlDataReader reader = cmd.ExecuteReader();
+            int co2_input = 0;
 
-        return Ok(co2_list);
+            while (reader.Read())
+            {
+                co2_input = Convert.ToInt32(reader["VOC"]);
+            }
+
+            co2_Item.CO2_Value = co2_input;
+            co2_Item.CO2_Lv = CO2Calculation(co2_input);
+
+            if (co2_Item.CO2_Lv == 1)
+            {
+                Lv_Desc = "Normal";
+            }
+            else if (co2_Item.CO2_Lv == 2)
+            {
+                Lv_Desc = "Affecting to Concentration";
+            }
+            else if (co2_Item.CO2_Lv == 3)
+            {
+                Lv_Desc = "Risk to health";
+            }
+            else if (co2_Item.CO2_Lv == 4)
+            {
+                Lv_Desc = "Harmful to health";
+            }
+            co2_Item.CO2_Lv_Desc = Lv_Desc;
+
+            co2_list.Add(co2_Item);
+
+            return Ok(co2_list);
+        }
     }
 
-    private int[] FindMaxEq(double[] input){
+    private int[] FindMaxEq(double[] input)
+    {
         double maxEq = input[0];
         int eqIndex = 0;
         int[] result = new int[2];
-        for(int i = 0; i < input.Length; i++){
-            if(input[i] > maxEq){
+        for (int i = 0; i < input.Length; i++)
+        {
+            if (input[i] > maxEq)
+            {
                 maxEq = input[i];
                 eqIndex = i;
             }
         }
         result[0] = Convert.ToInt32(maxEq);
         result[1] = eqIndex;
-        
+
         return result;
     }
-    private int[] FindIAQ_MaxMin(int x, int eqIndex){
+    private int[] FindIAQ_MaxMin(int x, int eqIndex)
+    {
         int[] max_min_IAQ = new int[2];
-        if(eqIndex == 0){ //PM 2.5
-            if(x < 26){
+        if (eqIndex == 0)
+        { //PM 2.5
+            if (x < 26)
+            {
                 max_min_IAQ[0] = 0; //Min value
                 max_min_IAQ[1] = 25; //Max value
             }
-            else if(x < 38){
+            else if (x < 38)
+            {
                 max_min_IAQ[0] = 26; //Min value
                 max_min_IAQ[1] = 50; //Max value
             }
-            else if(x < 51){
+            else if (x < 51)
+            {
                 max_min_IAQ[0] = 51; //Min value
                 max_min_IAQ[1] = 100; //Max value
             }
-            else if(x < 91){
+            else if (x < 91)
+            {
                 max_min_IAQ[0] = 100; //Min value
                 max_min_IAQ[1] = 200; //Max value
             }
-            else {
+            else
+            {
                 max_min_IAQ[0] = 201; //Min value
                 max_min_IAQ[1] = 0; //Max value
             }
         }
-        else if(eqIndex == 1){ //PM 10
-            if(x < 51){
+        else if (eqIndex == 1)
+        { //PM 10
+            if (x < 51)
+            {
                 max_min_IAQ[0] = 0; //Min value
                 max_min_IAQ[1] = 25; //Max value
             }
-            else if(x < 81){
+            else if (x < 81)
+            {
                 max_min_IAQ[0] = 26; //Min value
                 max_min_IAQ[1] = 50; //Max value
             }
-            else if(x < 121){
+            else if (x < 121)
+            {
                 max_min_IAQ[0] = 51; //Min value
                 max_min_IAQ[1] = 100; //Max value
             }
-            else if(x < 181){
+            else if (x < 181)
+            {
                 max_min_IAQ[0] = 101; //Min value
                 max_min_IAQ[1] = 200; //Max value
             }
-            else {
+            else
+            {
                 max_min_IAQ[0] = 201; //Min value
                 max_min_IAQ[1] = 0; //Max value
             }
         }
         return max_min_IAQ;
     }
-    private int[] FindX_MaxMin(int x, int eqIndex){
+    private int[] FindX_MaxMin(int x, int eqIndex)
+    {
         int[] max_min_Eq = new int[2];
-        if(eqIndex == 0){ //PM 2.5
-            if(x < 26){
+        if (eqIndex == 0)
+        { //PM 2.5
+            if (x < 26)
+            {
                 max_min_Eq[0] = 0; //Min value
                 max_min_Eq[1] = 25; //Max value
             }
-            else if(x < 38){
+            else if (x < 38)
+            {
                 max_min_Eq[0] = 26; //Min value
                 max_min_Eq[1] = 37; //Max value
             }
-            else if(x < 51){
+            else if (x < 51)
+            {
                 max_min_Eq[0] = 38; //Min value
                 max_min_Eq[1] = 50; //Max value
             }
-            else if(x < 91){
+            else if (x < 91)
+            {
                 max_min_Eq[0] = 51; //Min value
                 max_min_Eq[1] = 90; //Max value
             }
-            else {
+            else
+            {
                 max_min_Eq[0] = 91; //Min value
                 max_min_Eq[1] = 0; //Max value
             }
         }
-        else if(eqIndex == 1){ //PM 10
-            if(x < 51){
+        else if (eqIndex == 1)
+        { //PM 10
+            if (x < 51)
+            {
                 max_min_Eq[0] = 0; //Min value
                 max_min_Eq[1] = 50; //Max value
             }
-            else if(x < 81){
+            else if (x < 81)
+            {
                 max_min_Eq[0] = 51; //Min value
                 max_min_Eq[1] = 80; //Max value
             }
-            else if(x < 121){
+            else if (x < 121)
+            {
                 max_min_Eq[0] = 81; //Min value
                 max_min_Eq[1] = 120; //Max value
             }
-            else if(x < 181){
+            else if (x < 181)
+            {
                 max_min_Eq[0] = 121; //Min value
                 max_min_Eq[1] = 180; //Max value
             }
-            else {
+            else
+            {
                 max_min_Eq[0] = 181; //Min value
                 max_min_Eq[1] = 0; //Max value
             }
         }
         return max_min_Eq;
     }
-    private int IAQCalculation(int x, int min_x, int max_x, int min_i, int max_i){
+    private int IAQCalculation(int x, int min_x, int max_x, int min_i, int max_i)
+    {
         return (int)(((float)(max_i - min_i) / (max_x - min_x)) * (x - min_x) + min_i);
     }
-    private int CO2Calculation(int co2_ppm){
+    private int CO2Calculation(int co2_ppm)
+    {
         int result_Lv;
-        if(co2_ppm < 1000) {
+        if (co2_ppm < 1000)
+        {
             result_Lv = 1; //Normal
         }
-        else if(co2_ppm < 1500){
+        else if (co2_ppm < 1500)
+        {
             result_Lv = 2; //Affecting to Concentration
         }
-        else if(co2_ppm < 5000){
+        else if (co2_ppm < 5000)
+        {
             result_Lv = 3; //Risk to health
         }
-        else {
+        else
+        {
             result_Lv = 4; //Harmful to health
         }
-        
+
         return result_Lv;
     }
 }
