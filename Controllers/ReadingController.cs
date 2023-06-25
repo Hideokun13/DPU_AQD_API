@@ -24,7 +24,7 @@ public class ReadingController : ControllerBase
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
             while(reader.Read()){
                 ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = Convert.ToInt32(reader["ReadingID"]);
+                readingResponse.ReadingID = Convert.ToString(reader["ReadingID"]);
                 readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                 readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                 readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
@@ -54,7 +54,7 @@ public class ReadingController : ControllerBase
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
             while(reader.Read()){
                 ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = Convert.ToInt32(reader["ReadingID"]);
+                readingResponse.ReadingID = Convert.ToString(reader["ReadingID"]);
                 readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                 readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                 readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
@@ -84,7 +84,7 @@ public class ReadingController : ControllerBase
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
             while(reader.Read()){
                 ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = Convert.ToInt32(reader["ReadingID"]);
+                readingResponse.ReadingID = Convert.ToString(reader["ReadingID"]);
                 readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                 readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                 readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
@@ -247,7 +247,7 @@ public class ReadingController : ControllerBase
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
             while(reader.Read()){
                 ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = Convert.ToInt32(reader["ReadingID"]);
+                readingResponse.ReadingID = Convert.ToString(reader["ReadingID"]);
                 readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                 readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                 readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);

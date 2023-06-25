@@ -3,7 +3,7 @@ namespace DPU_AQD_API.Models;
 
 public class ReadingResponse
 {
-    public int ReadingID {get; set;}
+    public string ReadingID {get; set;}
     public DateTime Timestamp {get; set;}
     public int Temp {get; set;}
     public int Humidity {get; set;}
