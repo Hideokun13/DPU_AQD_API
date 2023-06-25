@@ -4,7 +4,7 @@ namespace DPU_AQD_API.Models;
 
 public class DeviceStatusResponse
 {
-    public int StatusID { get; set; }
+    public string StatusID { get; set; }
     public DateTime Timestamp { get; set; }
     public int DeviceID { get; set; }
     public string Sensor_Status { get; set; }
