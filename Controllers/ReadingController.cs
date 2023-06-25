@@ -206,33 +206,44 @@ public class ReadingController : ControllerBase
 
     [HttpGet("SentReadData")]
     public async Task<IActionResult> SentReadData (int Temp, int Humidity, int VOC, int PM2_5, int PM_10, int DeviceID) {
-        int count = 1;
+        string latestID = "";
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
-            cmd.CommandText = "getReadData";
+            cmd.CommandText = "getLatestDataByDeviceID";
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
             try{
                 while (reader.Read())
                 {
-                    count++;
+                    latestID = Convert.ToString(reader["ReadingID"]);
                 }
             } catch (MySqlException ex){
-                throw;
+                return BadRequest(ex);
             }
             await connection.CloseAsync();
         }
+
+        string readingID_date = latestID.Substring(0,6);
+        string readingID = latestID.Substring(6);
 
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "sentReadData"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_ReadingID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
+
+            if(DateTime.Now.ToString("yyyyMM") == readingID_date){
+                cmd.Parameters.Add("_ReadingID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", Convert.ToString((Convert.ToInt64(readingID)) + 1)));
+            }
+            else{
+                cmd.Parameters.Add("_ReadingID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 0));
+            }
+
             cmd.Parameters.Add("_Timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd.Parameters.Add("_Temp", MySqlDbType.Int32).Value = Temp;
             cmd.Parameters.Add("_Humidity", MySqlDbType.Int32).Value = Humidity;
@@ -245,7 +256,9 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
-            while(reader.Read()){
+            try
+            {
+                while(reader.Read()){
                 ReadingResponse readingResponse = new ReadingResponse();
                 readingResponse.ReadingID = Convert.ToString(reader["ReadingID"]);
                 readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
@@ -258,7 +271,15 @@ public class ReadingController : ControllerBase
                 
                 readingResponses.Add(readingResponse);
             }
+            
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
             await connection.CloseAsync();
+
             return Ok(readingResponses);
         }
     }
