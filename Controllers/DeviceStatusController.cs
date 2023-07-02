@@ -124,4 +124,33 @@ public class DeviceStatusController : ControllerBase
             return Ok(deviceStatusResponses);
         }
     }
+    [HttpGet("getLatestStatusEachDevice")]
+    public async Task<IActionResult> GetLatestStatusEachDevice()
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            List<int> BuildingList = new List<int>();
+
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getLatestStatusEachDevice"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceStatusResponse> DeviceStatusResponses = new List<DeviceStatusResponse>();
+            while (reader.Read())
+            {
+                DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
+                DeviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
+                DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
+
+                DeviceStatusResponses.Add(DeviceStatusResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(DeviceStatusResponses);
+        }
+    }
 }
