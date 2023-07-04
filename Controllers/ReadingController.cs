@@ -365,22 +365,142 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
-            while (reader.Read())
+            try
             {
-                ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = reader["ReadingID"].ToString();
-                readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
-                readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
-                readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
-                readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
-                readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
-                readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                while (reader.Read())
+                {
+                    ReadingResponse readingResponse = new ReadingResponse();
+                    readingResponse.ReadingID = reader["ReadingID"].ToString();
+                    readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
+                    readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
+                    readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
+                    readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
+                    readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
 
-                readingResponses.Add(readingResponse);
+                    readingResponses.Add(readingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
             return Ok(readingResponses);
+        }
+    }
+    [HttpGet("getDetailDataByDeviceID")]
+    public async Task<IActionResult> getDetailDataByDeviceID(int DeviceID)
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDeviceByID"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DetailDataResponse> detailDataResponses = new List<DetailDataResponse>();
+            try
+            {
+                while (reader.Read())
+                {
+                    DetailDataResponse detailDataResponse = new DetailDataResponse();
+                    detailDataResponse.DeviceID = reader["DeviceID"].ToString();
+                    detailDataResponse.DeviceName = reader["DeviceName"].ToString();
+                    detailDataResponse.Isinstalled = reader["Isinstalled"].ToString();
+                    detailDataResponse.RoomID = Convert.ToInt32(reader["RoomID"].ToString());
+                    detailDataResponse.BuildingID = Convert.ToInt32(reader["BuildingID"].ToString());
+
+                    detailDataResponses.Add(detailDataResponse);
+                }
+                await connection.CloseAsync();
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
+
+            MySqlCommand cmd2 = new MySqlCommand();
+            cmd2.Connection = connection;
+            cmd2.CommandText = "getLatestDataByDeviceID"; //Store Procedure Name
+            cmd2.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd2.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader2 = cmd2.ExecuteReader();
+            try
+            {
+                while (reader2.Read())
+                {
+                    foreach (var i in detailDataResponses)
+                    {
+                        if (i.DeviceID == Convert.ToString(DeviceID))
+                        {
+
+                            ReadingResponse readingResponse = new ReadingResponse();
+                            readingResponse.ReadingID = reader2["ReadingID"].ToString();
+                            readingResponse.Timestamp = DateTime.Parse(reader2["Timestamp"].ToString());
+                            readingResponse.Temp = Convert.ToInt32(reader2["Temp"]);
+                            readingResponse.Humidity = Convert.ToInt32(reader2["Humidity"]);
+                            readingResponse.VOC = Convert.ToInt32(reader2["VOC"]);
+                            readingResponse.PM2_5 = Convert.ToInt32(reader2["PM2_5"]);
+                            readingResponse.PM_10 = Convert.ToInt32(reader2["PM_10"]);
+                            readingResponse.DeviceID = Convert.ToInt32(reader2["DeviceID"]);
+
+                            i.LatestReadingData = readingResponse;
+                        }
+                    }
+                }
+                await connection.CloseAsync();
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
+
+            MySqlCommand cmd3 = new MySqlCommand();
+            cmd3.Connection = connection;
+            cmd3.CommandText = "getLatestStatusDataByID"; //Store Procedure Name
+            cmd3.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd3.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader3 = cmd3.ExecuteReader();
+            try
+            {
+                while (reader3.Read())
+                {
+                    foreach (var i in detailDataResponses)
+                    {
+                        if (i.DeviceID == Convert.ToString(DeviceID))
+                        {
+
+                            DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
+                            DeviceStatusResponse.StatusID = Convert.ToString(reader3["StatusID"]);
+                            DeviceStatusResponse.Timestamp = DateTime.Parse(reader3["Timestamp"].ToString());
+                            DeviceStatusResponse.DeviceID = Convert.ToInt32(reader3["DeviceID"]);
+                            DeviceStatusResponse.Sensor_Status = reader3["Sensor_Status"].ToString();
+
+                            i.LatestStatus = DeviceStatusResponse;
+                        }
+                    }
+                }
+                await connection.CloseAsync();
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
+
+            return Ok(detailDataResponses);
         }
     }
 }
