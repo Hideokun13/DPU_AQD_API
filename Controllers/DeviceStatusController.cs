@@ -79,7 +79,7 @@ public class DeviceStatusController : ControllerBase
             try{
                 while (reader.Read())
                 {
-                    latestID = Convert.ToString(reader["ReadingID"]);
+                    latestID = Convert.ToString(reader["StatusID"]);
                 }
             } catch (MySqlException ex){
                 return BadRequest(ex);
