@@ -254,11 +254,11 @@ public class ReadingController : ControllerBase
 
             if (DateTime.Now.ToString("yyyyMM") == readingID_date)
             {
-                cmd.Parameters.Add("_ReadingID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", Convert.ToString((Convert.ToInt64(readingID)) + 1)));
+                cmd.Parameters.Add("_ReadingID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", (Convert.ToInt64(readingID)) + 1));
             }
             else
             {
-                cmd.Parameters.Add("_ReadingID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 0));
+                cmd.Parameters.Add("_ReadingID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 1));
             }
 
             cmd.Parameters.Add("_Timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
