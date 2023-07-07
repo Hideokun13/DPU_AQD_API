@@ -97,10 +97,10 @@ public class DeviceStatusController : ControllerBase
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
 
             if(DateTime.Now.ToString("yyyyMM") == readingID_date){
-                cmd.Parameters.Add("_StatusID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", Convert.ToString((Convert.ToInt64(readingID)) + 1)));
+                cmd.Parameters.Add("_StatusID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", (Convert.ToInt64(readingID)) + 1));
             }
             else{
-                cmd.Parameters.Add("_StatusID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 0));
+                cmd.Parameters.Add("_StatusID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 1));
             }
 
             cmd.Parameters.Add("_Timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
