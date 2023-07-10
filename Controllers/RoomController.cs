@@ -240,4 +240,28 @@ public class RoomController : ControllerBase
             return Ok(roomResponses);
         }
     }
+    [HttpGet("getDeviceIdByRoomName")]
+    public async Task<IActionResult> getDeviceIdByRoomName(string _RoomName)
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getDeviceIdByRoomName"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = _RoomName;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
+            while (reader.Read())
+            {
+                DeviceResponse deviceResponse = new DeviceResponse();
+                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                deviceResponses.Add(deviceResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(deviceResponses);
+        }
+    }
 }
