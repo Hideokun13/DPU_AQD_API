@@ -106,7 +106,7 @@ public class ReadingController : ControllerBase
         }
     }
     [HttpGet("getHoursData")]
-    public async Task<IActionResult> getHoursData(int _deviceID, string _startDate, string _endDate)
+    public async Task<IActionResult> getHoursData(string roomName, string _startDate, string _endDate)
     {
         DateTime startDt = Convert.ToDateTime(_startDate);
         DateTime endDt = Convert.ToDateTime(_endDate);
@@ -117,7 +117,8 @@ public class ReadingController : ControllerBase
             cmd.Connection = connection;
             cmd.CommandText = "getDataHours"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            //cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = roomName;
             cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
             cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
 
@@ -142,7 +143,7 @@ public class ReadingController : ControllerBase
         }
     }
     [HttpGet("getWeeklyData")]
-    public async Task<IActionResult> getWeeklyData(int _deviceID, string _startDate, string _endDate)
+    public async Task<IActionResult> getWeeklyData(string roomName, string _startDate, string _endDate)
     {
         DateTime startDt = Convert.ToDateTime(_startDate);
         DateTime endDt = Convert.ToDateTime(_endDate);
@@ -153,7 +154,7 @@ public class ReadingController : ControllerBase
             cmd.Connection = connection;
             cmd.CommandText = "getDataWeekly"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = roomName;
             cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
             cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
 
@@ -178,7 +179,7 @@ public class ReadingController : ControllerBase
         }
     }
     [HttpGet("getMonthlyData")]
-    public async Task<IActionResult> getMonthlyData(int _deviceID, string _startDate, string _endDate)
+    public async Task<IActionResult> getMonthlyData(string roomName, string _startDate, string _endDate)
     {
         DateTime startDt = Convert.ToDateTime(_startDate);
         DateTime endDt = Convert.ToDateTime(_endDate);
@@ -189,7 +190,7 @@ public class ReadingController : ControllerBase
             cmd.Connection = connection;
             cmd.CommandText = "getDataMonthly"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = roomName;
             cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
             cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
 
