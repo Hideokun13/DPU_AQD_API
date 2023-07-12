@@ -223,6 +223,36 @@ public class RoomController : ControllerBase
             return Ok(roomResponses);
         }
     }
+    [HttpGet("updateHasDeviceInstalled")]
+    public async Task<IActionResult> updateHasDeviceInstalled(int _roomID, int _adminID, char _isHasDevice)
+    {
+
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "updateHasDeviceInstalled"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_roomID", MySqlDbType.Int32).Value = _roomID;
+            cmd.Parameters.Add("_hasDeviceInstalled", MySqlDbType.VarChar).Value = _isHasDevice;
+            cmd.Parameters.Add("_lastUpdateDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
+            cmd.Parameters.Add("_lastUpdateAdminID", MySqlDbType.Int32).Value = _adminID;
+
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<RoomResponse> roomResponses = new List<RoomResponse>();
+            while (reader.Read())
+            {
+                RoomResponse roomResponse = new RoomResponse();
+                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                roomResponse.RoomName = reader["RoomName"].ToString();
+                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();
