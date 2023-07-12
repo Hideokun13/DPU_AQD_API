@@ -30,6 +30,7 @@ public class RoomController : ControllerBase
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
                 roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();
@@ -58,6 +59,7 @@ public class RoomController : ControllerBase
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
                 roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();
@@ -100,7 +102,8 @@ public class RoomController : ControllerBase
             cmd.Parameters.Add("_buildingID", MySqlDbType.Int32).Value = _buildingID;
             cmd.Parameters.Add("_lastUpdateDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd.Parameters.Add("_lastUpdateAdminID", MySqlDbType.Int32).Value = _adminID;
-            
+            cmd.Parameters.Add("_hasDeviceInstalled", MySqlDbType.VarChar).Value = 'F';
+
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -114,6 +117,7 @@ public class RoomController : ControllerBase
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
                 roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();
@@ -146,6 +150,7 @@ public class RoomController : ControllerBase
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
                 roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();
@@ -178,6 +183,7 @@ public class RoomController : ControllerBase
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
                 roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();
@@ -210,6 +216,13 @@ public class RoomController : ControllerBase
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
                 roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                roomResponses.Add(roomResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(roomResponses);
+        }
+    }
                 roomResponses.Add(roomResponse);
             }
             await connection.CloseAsync();

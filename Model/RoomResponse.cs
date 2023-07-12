@@ -11,4 +11,5 @@ public class RoomResponse
     public int AdminID {get; set;}
     public DateTime LastUpdateDate {get; set;}
     public int LastUpdateAdminID {get; set;}
+    public char HasDeviceInstalled { get; set; }
 }
