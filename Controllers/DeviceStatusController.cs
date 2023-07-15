@@ -129,8 +129,6 @@ public class DeviceStatusController : ControllerBase
     {
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
-            List<int> BuildingList = new List<int>();
-
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "getLatestStatusEachDevice"; //Store Procedure Name
@@ -138,19 +136,24 @@ public class DeviceStatusController : ControllerBase
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
-            List<DeviceStatusResponse> DeviceStatusResponses = new List<DeviceStatusResponse>();
+            List<DeviceStatusEachDevice> deviceStatusEachDevices = new List<DeviceStatusEachDevice>();
             while (reader.Read())
             {
-                DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
-                DeviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
-                DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
-                DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
+                DeviceStatusEachDevice deviceStatusEachDevice = new DeviceStatusEachDevice();
+                deviceStatusEachDevice.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                deviceStatusEachDevice.BuildingName = reader["BuildingName"].ToString();
+                deviceStatusEachDevice.RoomID = Convert.ToInt32(reader["RoomID"]);
+                deviceStatusEachDevice.RoomName = reader["RoomName"].ToString();
+                deviceStatusEachDevice.StatusID = (reader.IsDBNull(4)) ? "-" : (reader["StatusID"].ToString());
+                deviceStatusEachDevice.Timestamp = (reader.IsDBNull(5)) ? DateTime.Parse("1970-01-01 00:00:00") : DateTime.Parse(reader["Timestamp"].ToString());
+                deviceStatusEachDevice.DeviceID = (reader.IsDBNull(6)) ? 0 : Convert.ToInt32(reader["DeviceID"]);
+                deviceStatusEachDevice.Sensor_Status = (reader.IsDBNull(7)) ? "-" : reader["Sensor_Status"].ToString();
 
-                DeviceStatusResponses.Add(DeviceStatusResponse);
+                deviceStatusEachDevices.Add(deviceStatusEachDevice);
             }
             await connection.CloseAsync();
-            return Ok(DeviceStatusResponses);
+
+            return Ok(deviceStatusEachDevices);
         }
     }
 }
