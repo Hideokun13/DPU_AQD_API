@@ -21,17 +21,25 @@ public class DeviceController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
-            while(reader.Read()){
-                DeviceResponse deviceResponse = new DeviceResponse();
-                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
-                deviceResponse.DeviceName = reader["deviceName"].ToString();
-                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
-                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
-                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
-                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
-                deviceResponses.Add(deviceResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    DeviceResponse deviceResponse = new DeviceResponse();
+                    deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                    deviceResponse.DeviceName = reader["deviceName"].ToString();
+                    deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                    deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                    deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                    deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
+                    deviceResponses.Add(deviceResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceResponses);
         }
     }
@@ -49,17 +57,25 @@ public class DeviceController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
-            while(reader.Read()){
-                DeviceResponse deviceResponse = new DeviceResponse();
-                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
-                deviceResponse.DeviceName = reader["deviceName"].ToString();
-                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
-                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
-                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
-                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
-                deviceResponses.Add(deviceResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    DeviceResponse deviceResponse = new DeviceResponse();
+                    deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                    deviceResponse.DeviceName = reader["deviceName"].ToString();
+                    deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                    deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                    deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                    deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
+                    deviceResponses.Add(deviceResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceResponses);
         }
     }
@@ -109,18 +125,26 @@ public class DeviceController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
-            while(reader.Read()){
-                DeviceResponse deviceResponse = new DeviceResponse();
-                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
-                deviceResponse.DeviceName = reader["deviceName"].ToString();
-                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
-                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
-                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
-                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
-                deviceResponses.Add(deviceResponse);
-            }
+            try
+            {
+                while (reader.Read())
+                {
+                    DeviceResponse deviceResponse = new DeviceResponse();
+                    deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                    deviceResponse.DeviceName = reader["deviceName"].ToString();
+                    deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                    deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                    deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                    deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
+                    deviceResponses.Add(deviceResponse);
+                }
 
-            await connection.CloseAsync();
+                await connection.CloseAsync();
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceResponses);
         }
     }
@@ -138,17 +162,25 @@ public class DeviceController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
-            while(reader.Read()){
-                DeviceResponse deviceResponse = new DeviceResponse();
-                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
-                deviceResponse.DeviceName = reader["deviceName"].ToString();
-                deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
-                deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
-                deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
-                deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
-                deviceResponses.Add(deviceResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    DeviceResponse deviceResponse = new DeviceResponse();
+                    deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                    deviceResponse.DeviceName = reader["deviceName"].ToString();
+                    deviceResponse.Isinstalled = Convert.ToChar(reader["Isinstalled"]);
+                    deviceResponse.RegisterDate = DateTime.Parse(reader["RegisterDate"].ToString());
+                    deviceResponse.BuildingID = Convert.ToInt32(reader["buildingID"]);
+                    deviceResponse.RoomID = Convert.ToInt32(reader["roomID"]);
+                    deviceResponses.Add(deviceResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceResponses);
         }
     }

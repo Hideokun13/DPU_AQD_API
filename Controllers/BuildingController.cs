@@ -21,18 +21,26 @@ public class BuildingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<BuildingResponse> buildingResponses = new List<BuildingResponse>();
-            while(reader.Read()){
-                BuildingResponse buildingResponse = new BuildingResponse();
-                buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                buildingResponse.BuildingName = reader["BuildingName"].ToString();
-                buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
-                buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                buildingResponses.Add(buildingResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    BuildingResponse buildingResponse = new BuildingResponse();
+                    buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    buildingResponse.BuildingName = reader["BuildingName"].ToString();
+                    buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
+                    buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    buildingResponses.Add(buildingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(buildingResponses);
         }
     }
@@ -49,18 +57,26 @@ public class BuildingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<BuildingResponse> buildingResponses = new List<BuildingResponse>();
-            while(reader.Read()){
-                BuildingResponse buildingResponse = new BuildingResponse();
-                buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                buildingResponse.BuildingName = reader["BuildingName"].ToString();
-                buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
-                buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                buildingResponses.Add(buildingResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    BuildingResponse buildingResponse = new BuildingResponse();
+                    buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    buildingResponse.BuildingName = reader["BuildingName"].ToString();
+                    buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
+                    buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    buildingResponses.Add(buildingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(buildingResponses);
         }
     }
@@ -104,18 +120,26 @@ public class BuildingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<BuildingResponse> buildingResponses = new List<BuildingResponse>();
-            while(reader.Read()){
-                BuildingResponse buildingResponse = new BuildingResponse();
-                buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                buildingResponse.BuildingName = reader["BuildingName"].ToString();
-                buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
-                buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                buildingResponses.Add(buildingResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    BuildingResponse buildingResponse = new BuildingResponse();
+                    buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    buildingResponse.BuildingName = reader["BuildingName"].ToString();
+                    buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
+                    buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    buildingResponses.Add(buildingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(buildingResponses);
         }
     }
@@ -136,18 +160,26 @@ public class BuildingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<BuildingResponse> buildingResponses = new List<BuildingResponse>();
-            while(reader.Read()){
-                BuildingResponse buildingResponse = new BuildingResponse();
-                buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                buildingResponse.BuildingName = reader["BuildingName"].ToString();
-                buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
-                buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                buildingResponses.Add(buildingResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    BuildingResponse buildingResponse = new BuildingResponse();
+                    buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    buildingResponse.BuildingName = reader["BuildingName"].ToString();
+                    buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
+                    buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    buildingResponses.Add(buildingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(buildingResponses);
         }
     }
@@ -168,18 +200,26 @@ public class BuildingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<BuildingResponse> buildingResponses = new List<BuildingResponse>();
-            while(reader.Read()){
-                BuildingResponse buildingResponse = new BuildingResponse();
-                buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                buildingResponse.BuildingName = reader["BuildingName"].ToString();
-                buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
-                buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                buildingResponses.Add(buildingResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    BuildingResponse buildingResponse = new BuildingResponse();
+                    buildingResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    buildingResponse.BuildingName = reader["BuildingName"].ToString();
+                    buildingResponse.BuildingStatus = Convert.ToChar(reader["BuildingStatus"]);
+                    buildingResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    buildingResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    buildingResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    buildingResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    buildingResponses.Add(buildingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(buildingResponses);
         }
     }

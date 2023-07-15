@@ -22,17 +22,24 @@ public class DeviceStatusController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceStatusResponse> DeviceStatusResponses = new List<DeviceStatusResponse>();
-            while (reader.Read())
+            try
             {
-                DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
-                DeviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
-                DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
-                DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
+                while (reader.Read())
+                {
+                    DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
+                    DeviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
+                    DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                    DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
 
-                DeviceStatusResponses.Add(DeviceStatusResponse);
+                    DeviceStatusResponses.Add(DeviceStatusResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(DeviceStatusResponses);
         }
     }
@@ -50,17 +57,24 @@ public class DeviceStatusController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceStatusResponse> DeviceStatusResponses = new List<DeviceStatusResponse>();
-            while (reader.Read())
+            try
             {
-                DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
-                DeviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
-                DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
-                DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
+                while (reader.Read())
+                {
+                    DeviceStatusResponse DeviceStatusResponse = new DeviceStatusResponse();
+                    DeviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
+                    DeviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    DeviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                    DeviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
 
-                DeviceStatusResponses.Add(DeviceStatusResponse);
+                    DeviceStatusResponses.Add(DeviceStatusResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(DeviceStatusResponses);
         }
     }
@@ -111,16 +125,24 @@ public class DeviceStatusController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceStatusResponse> deviceStatusResponses = new List<DeviceStatusResponse>();
-            while(reader.Read()){
-                DeviceStatusResponse deviceStatusResponse = new DeviceStatusResponse();
-                deviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
-                deviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                deviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
-                deviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
+            try
+            {
+                while (reader.Read())
+                {
+                    DeviceStatusResponse deviceStatusResponse = new DeviceStatusResponse();
+                    deviceStatusResponse.StatusID = Convert.ToString(reader["StatusID"]);
+                    deviceStatusResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    deviceStatusResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                    deviceStatusResponse.Sensor_Status = reader["Sensor_Status"].ToString();
 
-                deviceStatusResponses.Add(deviceStatusResponse);
+                    deviceStatusResponses.Add(deviceStatusResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceStatusResponses);
         }
     }
@@ -137,22 +159,28 @@ public class DeviceStatusController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceStatusEachDevice> deviceStatusEachDevices = new List<DeviceStatusEachDevice>();
-            while (reader.Read())
+            try
             {
-                DeviceStatusEachDevice deviceStatusEachDevice = new DeviceStatusEachDevice();
-                deviceStatusEachDevice.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                deviceStatusEachDevice.BuildingName = reader["BuildingName"].ToString();
-                deviceStatusEachDevice.RoomID = Convert.ToInt32(reader["RoomID"]);
-                deviceStatusEachDevice.RoomName = reader["RoomName"].ToString();
-                deviceStatusEachDevice.StatusID = (reader.IsDBNull(4)) ? "-" : (reader["StatusID"].ToString());
-                deviceStatusEachDevice.Timestamp = (reader.IsDBNull(5)) ? DateTime.Parse("1970-01-01 00:00:00") : DateTime.Parse(reader["Timestamp"].ToString());
-                deviceStatusEachDevice.DeviceID = (reader.IsDBNull(6)) ? 0 : Convert.ToInt32(reader["DeviceID"]);
-                deviceStatusEachDevice.Sensor_Status = (reader.IsDBNull(7)) ? "-" : reader["Sensor_Status"].ToString();
+                while (reader.Read())
+                {
+                    DeviceStatusEachDevice deviceStatusEachDevice = new DeviceStatusEachDevice();
+                    deviceStatusEachDevice.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    deviceStatusEachDevice.BuildingName = reader["BuildingName"].ToString();
+                    deviceStatusEachDevice.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    deviceStatusEachDevice.RoomName = reader["RoomName"].ToString();
+                    deviceStatusEachDevice.StatusID = (reader.IsDBNull(4)) ? "-" : (reader["StatusID"].ToString());
+                    deviceStatusEachDevice.Timestamp = (reader.IsDBNull(5)) ? DateTime.Parse("1970-01-01 00:00:00") : DateTime.Parse(reader["Timestamp"].ToString());
+                    deviceStatusEachDevice.DeviceID = (reader.IsDBNull(6)) ? 0 : Convert.ToInt32(reader["DeviceID"]);
+                    deviceStatusEachDevice.Sensor_Status = (reader.IsDBNull(7)) ? "-" : reader["Sensor_Status"].ToString();
 
-                deviceStatusEachDevices.Add(deviceStatusEachDevice);
+                    deviceStatusEachDevices.Add(deviceStatusEachDevice);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
-
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceStatusEachDevices);
         }
     }

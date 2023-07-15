@@ -58,23 +58,30 @@ public class IAQController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<EqResponse> eqResponses = new List<EqResponse>();
-            while (reader.Read())
+            try
             {
-                EqResponse eqResponse = new EqResponse();
-                eqResponse.avg_pm2_5 = Convert.ToDouble(reader["avg(PM2_5)"]);
-                eqResponse.avg_pm10 = Convert.ToDouble(reader["avg(PM_10)"]);
-                eqResponse.max_pm2_5 = Convert.ToInt32(reader["max(PM2_5)"]);
-                eqResponse.min_pm2_5 = Convert.ToInt32(reader["min(PM2_5)"]);
-                eqResponse.max_pm10 = Convert.ToInt32(reader["max(PM_10)"]);
-                eqResponse.min_pm10 = Convert.ToInt32(reader["min(PM_10)"]);
+                while (reader.Read())
+                {
+                    EqResponse eqResponse = new EqResponse();
+                    eqResponse.avg_pm2_5 = Convert.ToDouble(reader["avg(PM2_5)"]);
+                    eqResponse.avg_pm10 = Convert.ToDouble(reader["avg(PM_10)"]);
+                    eqResponse.max_pm2_5 = Convert.ToInt32(reader["max(PM2_5)"]);
+                    eqResponse.min_pm2_5 = Convert.ToInt32(reader["min(PM2_5)"]);
+                    eqResponse.max_pm10 = Convert.ToInt32(reader["max(PM_10)"]);
+                    eqResponse.min_pm10 = Convert.ToInt32(reader["min(PM_10)"]);
 
-                eqResponses.Add(eqResponse);
+                    eqResponses.Add(eqResponse);
 
-                eqArr[0] = eqResponse.avg_pm2_5;
-                eqArr[1] = eqResponse.avg_pm10;
+                    eqArr[0] = eqResponse.avg_pm2_5;
+                    eqArr[1] = eqResponse.avg_pm10;
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
-            
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
             //Calculation
             int[] FindEqResult = FindMaxEq(eqArr);
             int[] FindX_MaxMinResult = FindX_MaxMin(FindEqResult[0], FindEqResult[1]);

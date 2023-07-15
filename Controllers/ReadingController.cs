@@ -23,21 +23,28 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
-            while (reader.Read())
+            try
             {
-                ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = reader["ReadingID"].ToString();
-                readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
-                readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
-                readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
-                readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
-                readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
-                readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                while (reader.Read())
+                {
+                    ReadingResponse readingResponse = new ReadingResponse();
+                    readingResponse.ReadingID = reader["ReadingID"].ToString();
+                    readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
+                    readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
+                    readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
+                    readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
+                    readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
 
-                readingResponses.Add(readingResponse);
+                    readingResponses.Add(readingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(readingResponses);
         }
     }
@@ -55,21 +62,28 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
-            while (reader.Read())
+            try
             {
-                ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = reader["ReadingID"].ToString();
-                readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
-                readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
-                readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
-                readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
-                readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
-                readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                while (reader.Read())
+                {
+                    ReadingResponse readingResponse = new ReadingResponse();
+                    readingResponse.ReadingID = reader["ReadingID"].ToString();
+                    readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
+                    readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
+                    readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
+                    readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
+                    readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
 
-                readingResponses.Add(readingResponse);
+                    readingResponses.Add(readingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(readingResponses);
         }
     }
@@ -87,21 +101,28 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReadingResponse> readingResponses = new List<ReadingResponse>();
-            while (reader.Read())
+            try
             {
-                ReadingResponse readingResponse = new ReadingResponse();
-                readingResponse.ReadingID = reader["ReadingID"].ToString();
-                readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
-                readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
-                readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
-                readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
-                readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
-                readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
-                readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
+                while (reader.Read())
+                {
+                    ReadingResponse readingResponse = new ReadingResponse();
+                    readingResponse.ReadingID = reader["ReadingID"].ToString();
+                    readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
+                    readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
+                    readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
+                    readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
+                    readingResponse.DeviceID = Convert.ToInt32(reader["DeviceID"]);
 
-                readingResponses.Add(readingResponse);
+                    readingResponses.Add(readingResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(readingResponses);
         }
     }
@@ -126,19 +147,26 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            while (reader.Read())
+            try
             {
-                ReportDataResponse reportDataResponse = new ReportDataResponse();
-                reportDataResponse.Timestamp = (reader["hours"].ToString());
-                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                while (reader.Read())
+                {
+                    ReportDataResponse reportDataResponse = new ReportDataResponse();
+                    reportDataResponse.Timestamp = (reader["hours"].ToString());
+                    reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                    reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                    reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                    reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                reportDataResponses.Add(reportDataResponse);
+                    reportDataResponses.Add(reportDataResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(reportDataResponses);
         }
     }
@@ -162,19 +190,26 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            while (reader.Read())
+            try
             {
-                ReportDataResponse reportDataResponse = new ReportDataResponse();
-                reportDataResponse.Timestamp = (reader["days"].ToString());
-                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                while (reader.Read())
+                {
+                    ReportDataResponse reportDataResponse = new ReportDataResponse();
+                    reportDataResponse.Timestamp = (reader["days"].ToString());
+                    reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                    reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                    reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                    reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                reportDataResponses.Add(reportDataResponse);
+                    reportDataResponses.Add(reportDataResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(reportDataResponses);
         }
     }
@@ -198,19 +233,26 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            while (reader.Read())
+            try
             {
-                ReportDataResponse reportDataResponse = new ReportDataResponse();
-                reportDataResponse.Timestamp = (reader["days"].ToString());
-                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                while (reader.Read())
+                {
+                    ReportDataResponse reportDataResponse = new ReportDataResponse();
+                    reportDataResponse.Timestamp = (reader["days"].ToString());
+                    reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                    reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                    reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                    reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                reportDataResponses.Add(reportDataResponse);
+                    reportDataResponses.Add(reportDataResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(reportDataResponses);
         }
     }
@@ -234,19 +276,26 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            while (reader.Read())
+            try
             {
-                ReportDataResponse reportDataResponse = new ReportDataResponse();
-                reportDataResponse.Timestamp = (reader["hours"].ToString());
-                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                while (reader.Read())
+                {
+                    ReportDataResponse reportDataResponse = new ReportDataResponse();
+                    reportDataResponse.Timestamp = (reader["hours"].ToString());
+                    reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                    reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                    reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                    reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                reportDataResponses.Add(reportDataResponse);
+                    reportDataResponses.Add(reportDataResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(reportDataResponses);
         }
     }
@@ -270,19 +319,26 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            while (reader.Read())
+            try
             {
-                ReportDataResponse reportDataResponse = new ReportDataResponse();
-                reportDataResponse.Timestamp = (reader["days"].ToString());
-                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                while (reader.Read())
+                {
+                    ReportDataResponse reportDataResponse = new ReportDataResponse();
+                    reportDataResponse.Timestamp = (reader["days"].ToString());
+                    reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                    reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                    reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                    reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                reportDataResponses.Add(reportDataResponse);
+                    reportDataResponses.Add(reportDataResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(reportDataResponses);
         }
     }
@@ -306,19 +362,22 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            while (reader.Read())
+            try
             {
-                ReportDataResponse reportDataResponse = new ReportDataResponse();
-                reportDataResponse.Timestamp = (reader["days"].ToString());
-                reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
-                reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
-                reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
-                reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
-                reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
+                while (reader.Read())
+                {
+                    ReportDataResponse reportDataResponse = new ReportDataResponse();
+                    reportDataResponse.Timestamp = (reader["days"].ToString());
+                    reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
+                    reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
+                    reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
+                    reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
 
-                reportDataResponses.Add(reportDataResponse);
+                    reportDataResponses.Add(reportDataResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
             return Ok(reportDataResponses);
         }
     }
@@ -445,13 +504,20 @@ public class ReadingController : ControllerBase
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
             csv += timestampType + "," + "avg(Temp)" + "," + "avg(Humidity)" + "," + "avg(VOC)" + "," + "avg(PM2_5)" + "," + "avg(PM_10)" + "\n";
-            while (reader.Read())
+            try
             {
+                while (reader.Read())
+                {
 
-                csv += reader[timestampType].ToString() + "," + reader["avg(Temp)"].ToString() + "," + reader["avg(Humidity)"].ToString() + "," + reader["avg(VOC)"].ToString() + "," + reader["avg(PM2_5)"].ToString() + "," + reader["avg(PM_10)"].ToString() + "\n";
+                    csv += reader[timestampType].ToString() + "," + reader["avg(Temp)"].ToString() + "," + reader["avg(Humidity)"].ToString() + "," + reader["avg(VOC)"].ToString() + "," + reader["avg(PM2_5)"].ToString() + "," + reader["avg(PM_10)"].ToString() + "\n";
 
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
 
             byte[] fileBytes = Encoding.UTF8.GetBytes(csv);
             string fileName = _deviceID.ToString() + "_" + _startDate.ToString() + "_" + _endDate.ToString();

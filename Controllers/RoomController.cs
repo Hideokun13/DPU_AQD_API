@@ -21,20 +21,28 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while(reader.Read()){
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -51,18 +59,26 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while(reader.Read()){
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
             }
             await connection.CloseAsync();
             return Ok(roomResponses);
@@ -82,19 +98,26 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while (reader.Read())
+            try
             {
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
             }
             await connection.CloseAsync();
             return Ok(roomResponses);
@@ -142,20 +165,28 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while(reader.Read()){
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -176,20 +207,28 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while(reader.Read()){
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -210,20 +249,28 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while(reader.Read()){
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -244,20 +291,28 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while(reader.Read()){
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+            try
+            {
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -280,21 +335,28 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while (reader.Read())
+            try
             {
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
-                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
-                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
-                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
-                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
-                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
-                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
-                roomResponses.Add(roomResponse);
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                    roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                    roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                    roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                    roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                    roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                    roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -312,13 +374,20 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<RoomResponse> roomResponses = new List<RoomResponse>();
-            while (reader.Read())
+            try
             {
-                RoomResponse roomResponse = new RoomResponse();
-                roomResponse.RoomName = reader["RoomName"].ToString();
-                roomResponses.Add(roomResponse);
+                while (reader.Read())
+                {
+                    RoomResponse roomResponse = new RoomResponse();
+                    roomResponse.RoomName = reader["RoomName"].ToString();
+                    roomResponses.Add(roomResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(roomResponses);
         }
     }
@@ -336,13 +405,20 @@ public class RoomController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<DeviceResponse> deviceResponses = new List<DeviceResponse>();
-            while (reader.Read())
+            try
             {
-                DeviceResponse deviceResponse = new DeviceResponse();
-                deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
-                deviceResponses.Add(deviceResponse);
+                while (reader.Read())
+                {
+                    DeviceResponse deviceResponse = new DeviceResponse();
+                    deviceResponse.DeviceID = Convert.ToInt32(reader["deviceID"]);
+                    deviceResponses.Add(deviceResponse);
+                }
+                await connection.CloseAsync();
             }
-            await connection.CloseAsync();
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
             return Ok(deviceResponses);
         }
     }
