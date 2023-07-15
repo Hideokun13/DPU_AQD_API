@@ -68,6 +68,38 @@ public class RoomController : ControllerBase
             return Ok(roomResponses);
         }
     }
+    [HttpGet("getRoomByBuildingID")]
+    public async Task<IActionResult> GetRoomByBuildingID(int _buildingID)
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getRoomByBuildingID"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_buildingID", MySqlDbType.Int32).Value = _buildingID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<RoomResponse> roomResponses = new List<RoomResponse>();
+            while (reader.Read())
+            {
+                RoomResponse roomResponse = new RoomResponse();
+                roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
+                roomResponse.RoomName = reader["RoomName"].ToString();
+                roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
+                roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
+                roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
+                roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
+                roomResponse.LastUpdateAdminID = Convert.ToInt32(reader["LastUpdateAdminID"]);
+                roomResponse.HasDeviceInstalled = Convert.ToChar(reader["HasDeviceInstalled"]);
+                roomResponses.Add(roomResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(roomResponses);
+        }
+    }
     [HttpPost("registerRoom")]
     public async Task<IActionResult> RegisterRoom (string _roomName, int _buildingID, int _adminID) {
         int count = 1;
