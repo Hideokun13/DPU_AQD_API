@@ -68,7 +68,7 @@ public class RoomController : ControllerBase
         }
     }
     [HttpPost("registerRoom")]
-    public async Task<IActionResult> RegisterBuilding (string _roomName, int _buildingID, int _adminID) {
+    public async Task<IActionResult> RegisterRoom (string _roomName, int _buildingID, int _adminID) {
         int count = 1;
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
