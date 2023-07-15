@@ -55,6 +55,7 @@ public class RoomController : ControllerBase
                 roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
                 roomResponse.RoomName = reader["RoomName"].ToString();
                 roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
                 roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
@@ -113,6 +114,7 @@ public class RoomController : ControllerBase
                 roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
                 roomResponse.RoomName = reader["RoomName"].ToString();
                 roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
                 roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
@@ -146,6 +148,7 @@ public class RoomController : ControllerBase
                 roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
                 roomResponse.RoomName = reader["RoomName"].ToString();
                 roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
                 roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
@@ -179,6 +182,7 @@ public class RoomController : ControllerBase
                 roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
                 roomResponse.RoomName = reader["RoomName"].ToString();
                 roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
                 roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
@@ -212,6 +216,7 @@ public class RoomController : ControllerBase
                 roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
                 roomResponse.RoomName = reader["RoomName"].ToString();
                 roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
                 roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
@@ -248,6 +253,7 @@ public class RoomController : ControllerBase
                 roomResponse.RoomID = Convert.ToInt32(reader["RoomID"]);
                 roomResponse.RoomName = reader["RoomName"].ToString();
                 roomResponse.RoomStatus = Convert.ToChar(reader["RoomStatus"]);
+                roomResponse.BuildingID = Convert.ToInt32(reader["BuildingID"]);
                 roomResponse.CreateDate = DateTime.Parse(reader["CreateDate"].ToString());
                 roomResponse.AdminID = Convert.ToInt32(reader["AdminID"]);
                 roomResponse.LastUpdateDate = DateTime.Parse(reader["LastUpdateDate"].ToString());
