@@ -378,7 +378,11 @@ public class ReadingController : ControllerBase
                 }
                 await connection.CloseAsync();
             }
-            return Ok(reportDataResponses);
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+        return Ok(reportDataResponses);
         }
     }
 
