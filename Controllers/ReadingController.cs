@@ -475,7 +475,7 @@ public class ReadingController : ControllerBase
         }
     }
     [HttpGet("exportReadData")]
-    public async Task<IActionResult> exportReadData(string _deviceName, string _startDate, string _endDate)
+    public async Task<IActionResult> exportReadData(string _roomName, string _startDate, string _endDate)
     {
         DateTime startDt = Convert.ToDateTime(_startDate);
         DateTime endDt = Convert.ToDateTime(_endDate);
@@ -501,7 +501,7 @@ public class ReadingController : ControllerBase
             //}
             cmd.CommandText = "getDataHoursByDeviceID";
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_DeviceName", MySqlDbType.VarChar).Value = _deviceName;
+            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = _roomName;
             cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
             cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
 
@@ -509,7 +509,6 @@ public class ReadingController : ControllerBase
 
             MySqlDataReader reader = cmd.ExecuteReader();
             List<ReportDataResponse> reportDataResponses = new List<ReportDataResponse>();
-            csv += _deviceName + "\n";
             csv += timestampType + "," + "avg(Temp)" + "," + "avg(Humidity)" + "," + "avg(VOC)" + "," + "avg(PM2_5)" + "," + "avg(PM_10)" + "\n";
             try
             {
@@ -534,7 +533,7 @@ public class ReadingController : ControllerBase
             }
 
             byte[] fileBytes = Encoding.UTF8.GetBytes(csv);
-            string fileName = _deviceName.ToString() + "_" + _startDate.ToString() + "_" + _endDate.ToString();
+            string fileName = _roomName.ToString() + "_" + _startDate.ToString() + "_" + _endDate.ToString();
 
             return File(fileBytes, "text/csv", fileName);
         }
