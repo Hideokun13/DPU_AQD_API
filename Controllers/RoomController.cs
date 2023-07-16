@@ -125,33 +125,48 @@ public class RoomController : ControllerBase
     }
     [HttpPost("registerRoom")]
     public async Task<IActionResult> RegisterRoom (string _roomName, int _buildingID, int _adminID) {
-        int count = 1;
+        string latestID = "";
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
-            cmd.CommandText = "getRoom";
+            cmd.CommandText = "getLatestRoom";
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
-            try{
+            try
+            {
                 while (reader.Read())
                 {
-                    count++;
+                    latestID = Convert.ToString(reader["RoomID"]);
                 }
-            } catch (MySqlException ex){
-                throw;
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
             }
             await connection.CloseAsync();
         }
+
+        string roomID_date = latestID.Substring(0, 6);
+        string roomID = latestID.Substring(6);
 
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "registerRoom"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_roomID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
+
+            if (DateTime.Now.ToString("yyyyMM") == roomID_date)
+            {
+                cmd.Parameters.Add("_roomID", MySqlDbType.Int32).Value = Convert.ToInt32((DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", (Convert.ToInt64(roomID)) + 1)));
+            }
+            else
+            {
+                cmd.Parameters.Add("_roomID", MySqlDbType.Int32).Value = Convert.ToInt32((DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", 1)));
+            }
+
             cmd.Parameters.Add("_roomName", MySqlDbType.VarChar).Value = _roomName;
             cmd.Parameters.Add("_createDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd.Parameters.Add("_roomStatus", MySqlDbType.VarChar).Value = 'T';
