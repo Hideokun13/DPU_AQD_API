@@ -474,30 +474,31 @@ public class ReadingController : ControllerBase
         }
     }
     [HttpGet("exportReadData")]
-    public async Task<IActionResult> exportReadData(int _deviceID, string _startDate, string _endDate, string requestType)
+    public async Task<IActionResult> exportReadData(int _deviceID, string _startDate, string _endDate)
     {
         DateTime startDt = Convert.ToDateTime(_startDate);
         DateTime endDt = Convert.ToDateTime(_endDate);
-        string timestampType = "days";
+        string timestampType = "Timestamp";
         string csv = "";
 
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
-            if (requestType == "Hours")
-            {
-                cmd.CommandText = "getDataHours";
-                timestampType = "hours";
-            }
-            else if (requestType == "Weekly")
-            {
-                cmd.CommandText = "getDataWeekly";
-            }
-            else if (requestType == "Monthly")
-            {
-                cmd.CommandText = "getDataHours";
-            }
+            //if (requestType == "Hours")
+            //{
+            //    cmd.CommandText = "getDataHoursByDeviceID";
+            //    timestampType = "hours";
+            //}
+            //else if (requestType == "Weekly")
+            //{
+            //    cmd.CommandText = "getDataWeeklyByDeviceID";
+            //}
+            //else if (requestType == "Monthly")
+            //{
+            //    cmd.CommandText = "getDataMonthlyByDeviceID";
+            //}
+            cmd.CommandText = "getDataHoursByDeviceID";
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
             cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
@@ -510,12 +511,19 @@ public class ReadingController : ControllerBase
             csv += timestampType + "," + "avg(Temp)" + "," + "avg(Humidity)" + "," + "avg(VOC)" + "," + "avg(PM2_5)" + "," + "avg(PM_10)" + "\n";
             try
             {
-                while (reader.Read())
+                if (!reader.HasRows)
                 {
 
-                    csv += reader[timestampType].ToString() + "," + reader["avg(Temp)"].ToString() + "," + reader["avg(Humidity)"].ToString() + "," + reader["avg(VOC)"].ToString() + "," + reader["avg(PM2_5)"].ToString() + "," + reader["avg(PM_10)"].ToString() + "\n";
-
+                    return BadRequest("No Data Found!");
                 }
+                else
+                {
+                    while (reader.Read())
+                    {
+                        csv += reader["date_and_hour"].ToString() + "," + reader["avg(Temp)"].ToString() + "," + reader["avg(Humidity)"].ToString() + "," + reader["avg(VOC)"].ToString() + "," + reader["avg(PM2_5)"].ToString() + "," + reader["avg(PM_10)"].ToString() + "\n";
+                    }
+                }
+
                 await connection.CloseAsync();
             }
             catch (MySqlException ex)
