@@ -39,6 +39,34 @@ public class IAQController : ControllerBase
             return Ok(iAQResponses);
         }
     }
+    [HttpGet("GetLatestIAQByRoomName")]
+    public async Task<IActionResult> GetLatestIAQByRoomName(string _roomName)
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "get_iaqByRoomName"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = _roomName;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<IAQResponse> iAQResponses = new List<IAQResponse>();
+            while (reader.Read())
+            {
+                IAQResponse iAQResponse = new IAQResponse();
+                iAQResponse.IAQ_ID = reader["IAQ_ID"].ToString();
+                iAQResponse.timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                iAQResponse.Value = Convert.ToInt32(reader["IAQ_Value"]);
+                iAQResponse.DeviceID = reader["DeviceID"].ToString();
+
+                iAQResponses.Add(iAQResponse);
+            }
+            await connection.CloseAsync();
+            return Ok(iAQResponses);
+        }
+    }
     [HttpGet("CalculateIAQ")]
     public async Task<IActionResult> CalculateIAQ(int _deviceID)
     {
@@ -146,6 +174,7 @@ public class IAQController : ControllerBase
                     iAQResponse.IAQ_ID = reader3["IAQ_ID"].ToString();
                     iAQResponse.timestamp = DateTime.Parse(reader3["Timestamp"].ToString());
                     iAQResponse.Value = Convert.ToInt32(reader3["IAQ_Value"]);
+                    iAQResponse.DeviceID = reader["DeviceID"].ToString();
 
                     iAQResponses.Add(iAQResponse);
 
