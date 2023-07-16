@@ -29,7 +29,7 @@ public class IAQController : ControllerBase
             while (reader.Read())
             {
                 IAQResponse iAQResponse = new IAQResponse();
-                iAQResponse.IAQ_ID = Convert.ToInt32(reader["IAQ_ID"]);
+                iAQResponse.IAQ_ID = reader["IAQ_ID"].ToString();
                 iAQResponse.timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                 iAQResponse.Value = Convert.ToInt32(reader["IAQ_Value"]);
 
@@ -40,11 +40,9 @@ public class IAQController : ControllerBase
         }
     }
     [HttpGet("CalculateIAQ")]
-    public async Task<IActionResult> CalculateIAQ(int _deviceID, string _startDate, string _endDate)
+    public async Task<IActionResult> CalculateIAQ(int _deviceID)
     {
         double[] eqArr = new double [2];
-        DateTime startDt = Convert.ToDateTime(_startDate);
-        DateTime endDt = Convert.ToDateTime(_endDate);
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
@@ -52,8 +50,6 @@ public class IAQController : ControllerBase
             cmd.CommandText = "getAVG_Eq"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = _deviceID;
-            cmd.Parameters.Add("_startDate", MySqlDbType.Date).Value = startDt;
-            cmd.Parameters.Add("_endDate", MySqlDbType.Date).Value = endDt;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -86,13 +82,82 @@ public class IAQController : ControllerBase
             int[] FindEqResult = FindMaxEq(eqArr);
             int[] FindX_MaxMinResult = FindX_MaxMin(FindEqResult[0], FindEqResult[1]);
             int[] FindIAQ_MaxMinResult = FindIAQ_MaxMin(FindEqResult[0], FindEqResult[1]);
-            
-            IAQResponse iAQResponse = new IAQResponse();
-            iAQResponse.IAQ_ID = 1;
-            iAQResponse.timestamp = DateTime.UtcNow;
-            iAQResponse.Value = IAQCalculation(FindEqResult[0], FindX_MaxMinResult[0], FindX_MaxMinResult[1], FindIAQ_MaxMinResult[0], FindIAQ_MaxMinResult[1]);
-            
-            return Ok(iAQResponse);
+
+            string latestID = "";
+            MySqlCommand cmd2 = new MySqlCommand();
+            cmd2.Connection = connection;
+            cmd2.CommandText = "getLatestIAQ";
+            cmd2.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd2.Parameters.Add("_deviceID", MySqlDbType.Int32).Value = _deviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader2 = cmd2.ExecuteReader();
+            try
+            {
+                if (!reader2.IsDBNull(0))
+                {
+                    while (reader2.Read())
+                    {
+                        latestID = Convert.ToString(reader2["IAQ_ID"]);
+                    }
+                }
+                else
+                {
+                    latestID = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 1));
+                }
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+            await connection.CloseAsync();
+
+
+            MySqlCommand cmd3 = new MySqlCommand();
+            cmd3.Connection = connection;
+            cmd3.CommandText = "sentIAQCalulation"; //Store Procedure Name
+            cmd3.CommandType = System.Data.CommandType.StoredProcedure;
+
+            string iAQID_date = latestID.Substring(0, 6);
+            string iAQID = latestID.Substring(6);
+
+            if (DateTime.Now.ToString("yyyyMM") == iAQID_date)
+            {
+                cmd3.Parameters.Add("_iaqID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", (Convert.ToInt64(iAQID)) + 1));
+            }
+            else
+            {
+                cmd3.Parameters.Add("_iaqID", MySqlDbType.VarChar).Value = (DateTime.Now.ToString("yyyyMM") + String.Format("{0:00000}", 1));
+            }
+
+            cmd3.Parameters.Add("_timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
+            cmd3.Parameters.Add("_iaqValue", MySqlDbType.Int32).Value = IAQCalculation(FindEqResult[0], FindX_MaxMinResult[0], FindX_MaxMinResult[1], FindIAQ_MaxMinResult[0], FindIAQ_MaxMinResult[1]);
+            cmd3.Parameters.Add("_deviceID", MySqlDbType.Int32).Value = _deviceID;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader3 = cmd3.ExecuteReader();
+            List<IAQResponse> iAQResponses = new List<IAQResponse>();
+            try
+            {
+                while (reader3.Read())
+                {
+
+                    IAQResponse iAQResponse = new IAQResponse();
+                    iAQResponse.IAQ_ID = reader3["IAQ_ID"].ToString();
+                    iAQResponse.timestamp = DateTime.Parse(reader3["Timestamp"].ToString());
+                    iAQResponse.Value = Convert.ToInt32(reader3["IAQ_Value"]);
+
+                    iAQResponses.Add(iAQResponse);
+
+                }
+                await connection.CloseAsync();
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+
+            return Ok(iAQResponses);
         }
     }
     public class CO2
