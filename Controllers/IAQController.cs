@@ -32,6 +32,7 @@ public class IAQController : ControllerBase
                 iAQResponse.IAQ_ID = reader["IAQ_ID"].ToString();
                 iAQResponse.timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                 iAQResponse.Value = Convert.ToInt32(reader["IAQ_Value"]);
+                iAQResponse.DeviceID = reader["DeviceID"].ToString();
 
                 iAQResponses.Add(iAQResponse);
             }
