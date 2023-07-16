@@ -13,7 +13,7 @@ namespace DPU_AQD_API;
 public class IAQController : ControllerBase
 {
     private SQLConection sQLConection = new SQLConection();
-    [HttpGet("GetIAQ")]
+    [HttpGet("GetIAQData")]
     public async Task<IActionResult> GetIAQData()
     {
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
