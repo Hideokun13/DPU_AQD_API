@@ -40,16 +40,18 @@ public class IAQController : ControllerBase
             return Ok(iAQResponses);
         }
     }
-    [HttpGet("GetLatestIAQByRoomName")]
-    public async Task<IActionResult> GetLatestIAQByRoomName(string _roomName)
+    [HttpGet("GetLatestIAQByDeviceID")]
+    public async Task<IActionResult> GetLatestIAQByDeviceID(string _deviceID)
     {
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
-            cmd.CommandText = "get_iaqByRoomName"; //Store Procedure Name
+            //cmd.CommandText = "get_iaqByRoomName"; //Store Procedure Name
+            cmd.CommandText = "get_iaqByDeviceID"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = _roomName;
+            //cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = _roomName;
+            cmd.Parameters.Add("_DeviceID", MySqlDbType.VarChar).Value = _deviceID;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
