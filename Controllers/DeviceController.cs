@@ -82,40 +82,48 @@ public class DeviceController : ControllerBase
 
     [HttpPost("registerDevice")]
     public async Task<IActionResult> RegisterDevice (string deviceName, int buildingID, int roomID) {
-        int count = 1;
+        string latestID = "";
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
-            cmd.CommandText = "getDevice";
+            cmd.CommandText = "getLatestDeviceID";
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
-            try{
+            try
+            {
                 while (reader.Read())
                 {
-                    DeviceResponse deviceResponse = new DeviceResponse();
-                    deviceResponse.DeviceName = reader["deviceName"].ToString();
-                    if(deviceResponse.DeviceName == deviceName){
-                        await connection.CloseAsync();
-                        return BadRequest($"Device ID: '{deviceName}' is already exist");
-                    }
-                    else
-                        count++;
+                    latestID = Convert.ToString(reader["DeviceID"]);
                 }
-            } catch (MySqlException ex){
-                throw;
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
             }
             await connection.CloseAsync();
         }
+
+        string deviceID_date = latestID.Substring(0, 6);
+        string deviceID = latestID.Substring(6);
 
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "registerDevice"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = Convert.ToInt32(DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", count));
+
+            if (DateTime.Now.ToString("yyyyMM") == deviceID_date)
+            {
+                cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = Convert.ToInt32((DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", (Convert.ToInt64(deviceID)) + 1)));
+            }
+            else
+            {
+                cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = Convert.ToInt32((DateTime.Now.ToString("yyyyMM") + String.Format("{0:0000}", 1)));
+            }
+
             cmd.Parameters.Add("_DeviceName", MySqlDbType.VarChar).Value = deviceName;
             cmd.Parameters.Add("_Isinstalled", MySqlDbType.VarChar).Value = "T";
             cmd.Parameters.Add("_RegisterDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
