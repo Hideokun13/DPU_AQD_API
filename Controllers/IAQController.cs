@@ -125,7 +125,7 @@ public class IAQController : ControllerBase
             MySqlDataReader reader2 = cmd2.ExecuteReader();
             try
             {
-                if (!reader2.IsDBNull(0))
+                if (reader2.HasRows)
                 {
                     while (reader2.Read())
                     {
@@ -177,7 +177,7 @@ public class IAQController : ControllerBase
                     iAQResponse.IAQ_ID = reader3["IAQ_ID"].ToString();
                     iAQResponse.timestamp = DateTime.Parse(reader3["Timestamp"].ToString());
                     iAQResponse.Value = Convert.ToInt32(reader3["IAQ_Value"]);
-                    iAQResponse.DeviceID = reader["DeviceID"].ToString();
+                    iAQResponse.DeviceID = reader3["DeviceID"].ToString();
 
                     iAQResponses.Add(iAQResponse);
 
