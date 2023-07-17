@@ -33,6 +33,8 @@ public class SurveyController : ControllerBase
                     surveyResponse.surveyID = reader["SurveyID"].ToString();
                     surveyResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                     surveyResponse.SubmitData = reader["SurveyData"].ToString();
+                    surveyResponse.BuildingID = Convert.ToInt32(reader["BuildingID"].ToString());
+                    surveyResponse.RoomName = reader["RoomName"].ToString();
 
                     surveyResponses.Add(surveyResponse);
                 }
@@ -46,7 +48,7 @@ public class SurveyController : ControllerBase
         }
     }
     [HttpPost("submitSurvey")]
-    public async Task<IActionResult> SubmitSurvey(string submitData)
+    public async Task<IActionResult> SubmitSurvey(string submitData, int buildingID, string roomName)
     {
         
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
@@ -100,6 +102,8 @@ public class SurveyController : ControllerBase
 
             cmd2.Parameters.Add("_timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd2.Parameters.Add("_submitData", MySqlDbType.Text).Value = submitData;
+            cmd2.Parameters.Add("_buildingID", MySqlDbType.Int32).Value = buildingID;
+            cmd2.Parameters.Add("_roomName", MySqlDbType.VarChar).Value = roomName;
             await connection.OpenAsync();
 
             MySqlDataReader reader2 = cmd2.ExecuteReader();
@@ -112,6 +116,8 @@ public class SurveyController : ControllerBase
                     surveyResponse.surveyID = reader2["SurveyID"].ToString();
                     surveyResponse.Timestamp = DateTime.Parse(reader2["Timestamp"].ToString());
                     surveyResponse.SubmitData = reader2["SurveyData"].ToString();
+                    surveyResponse.BuildingID = Convert.ToInt32(reader2["BuildingID"].ToString());
+                    surveyResponse.RoomName = reader2["RoomName"].ToString();
 
                     surveyResponses.Add(surveyResponse);
                 }
