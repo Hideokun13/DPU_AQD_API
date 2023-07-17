@@ -290,14 +290,14 @@ public class RoomController : ControllerBase
         }
     }
     [HttpGet("deleteRoom")]
-    public async Task<IActionResult> DeleteRoom (int _roomID, int _adminID) {
+    public async Task<IActionResult> DeleteRoom (int _roomName, int _adminID) {
 
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
             cmd.CommandText = "deleteRoom"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_roomID", MySqlDbType.Int32).Value = _roomID;
+            cmd.Parameters.Add("_roomID", MySqlDbType.VarChar).Value = _roomName;
             cmd.Parameters.Add("_roomStatus", MySqlDbType.VarChar).Value = 'F';
             cmd.Parameters.Add("_lastUpdateDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd.Parameters.Add("_lastUpdateAdminID", MySqlDbType.Int32).Value = _adminID;
