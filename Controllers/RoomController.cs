@@ -290,7 +290,7 @@ public class RoomController : ControllerBase
         }
     }
     [HttpGet("deleteRoom")]
-    public async Task<IActionResult> DeleteRoom (int _roomName, int _adminID) {
+    public async Task<IActionResult> DeleteRoom (string _roomName, int _adminID) {
 
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection)){
             MySqlCommand cmd = new MySqlCommand();
