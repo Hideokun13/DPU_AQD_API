@@ -297,7 +297,7 @@ public class RoomController : ControllerBase
             cmd.Connection = connection;
             cmd.CommandText = "deleteRoom"; //Store Procedure Name
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_roomID", MySqlDbType.VarChar).Value = _roomName;
+            cmd.Parameters.Add("_roomName", MySqlDbType.VarChar).Value = _roomName;
             cmd.Parameters.Add("_roomStatus", MySqlDbType.VarChar).Value = 'F';
             cmd.Parameters.Add("_lastUpdateDate", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd.Parameters.Add("_lastUpdateAdminID", MySqlDbType.Int32).Value = _adminID;
