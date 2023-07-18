@@ -131,4 +131,41 @@ public class SurveyController : ControllerBase
             return Ok(surveyResponses);
         }
     }
+    [HttpGet("getSurveyByBuildngID")]
+    public async Task<IActionResult> GetSurveyByBuildngID(int _buildingID, string _roomName)
+    {
+        using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
+        {
+            MySqlCommand cmd = new MySqlCommand();
+            cmd.Connection = connection;
+            cmd.CommandText = "getSurveyByBuildingID"; //Store Procedure Name
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.Add("_BuildingID", MySqlDbType.Int32).Value = _buildingID;
+            cmd.Parameters.Add("_RoomName", MySqlDbType.VarChar).Value = _roomName;
+            await connection.OpenAsync();
+
+            MySqlDataReader reader = cmd.ExecuteReader();
+            List<SurveyResponse> surveyResponses = new List<SurveyResponse>();
+            try
+            {
+                while (reader.Read())
+                {
+                    SurveyResponse surveyResponse = new SurveyResponse();
+                    surveyResponse.surveyID = reader["SurveyID"].ToString();
+                    surveyResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
+                    surveyResponse.SubmitData = reader["SurveyData"].ToString();
+                    surveyResponse.BuildingID = Convert.ToInt32(reader["BuildingID"].ToString());
+                    surveyResponse.RoomName = reader["RoomName"].ToString();
+
+                    surveyResponses.Add(surveyResponse);
+                }
+                await connection.CloseAsync();
+            }
+            catch (MySqlException ex)
+            {
+                return BadRequest(ex);
+            }
+            return Ok(surveyResponses);
+        }
+    }
 }
