@@ -395,9 +395,8 @@ public class ReadingController : ControllerBase
         {
             MySqlCommand cmd = new MySqlCommand();
             cmd.Connection = connection;
-            cmd.CommandText = "getLatestDataByDeviceID";
+            cmd.CommandText = "getLatestData";
             cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.Add("_DeviceID", MySqlDbType.Int32).Value = DeviceID;
             await connection.OpenAsync();
 
             MySqlDataReader reader = cmd.ExecuteReader();
@@ -405,7 +404,7 @@ public class ReadingController : ControllerBase
             {
                 while (reader.Read())
                 {
-                    latestID = Convert.ToString(reader["ReadingID"]);
+                    latestID = reader["ReadingID"].ToString();
                 }
             }
             catch (MySqlException ex)
