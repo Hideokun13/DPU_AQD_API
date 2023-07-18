@@ -33,6 +33,7 @@ public class ReadingController : ControllerBase
                     readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                     readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                     readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.CO2 = Convert.ToInt32(reader["CO2"]);
                     readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
                     readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
                     readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
@@ -72,6 +73,7 @@ public class ReadingController : ControllerBase
                     readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                     readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                     readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.CO2 = Convert.ToInt32(reader["CO2"]);
                     readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
                     readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
                     readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
@@ -111,6 +113,7 @@ public class ReadingController : ControllerBase
                     readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                     readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                     readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.CO2 = Convert.ToInt32(reader["CO2"]);
                     readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
                     readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
                     readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
@@ -156,6 +159,7 @@ public class ReadingController : ControllerBase
                     reportDataResponse.Timestamp = (reader["hours"].ToString());
                     reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                     reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.CO2 = Convert.ToInt32(reader["avg(CO2)"]);
                     reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
                     reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
                     reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
@@ -199,6 +203,7 @@ public class ReadingController : ControllerBase
                     reportDataResponse.Timestamp = (reader["days"].ToString());
                     reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                     reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.CO2 = Convert.ToInt32(reader["avg(CO2)"]);
                     reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
                     reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
                     reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
@@ -242,6 +247,7 @@ public class ReadingController : ControllerBase
                     reportDataResponse.Timestamp = (reader["days"].ToString());
                     reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                     reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.CO2 = Convert.ToInt32(reader["avg(CO2)"]);
                     reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
                     reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
                     reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
@@ -285,6 +291,7 @@ public class ReadingController : ControllerBase
                     reportDataResponse.Timestamp = (reader["hours"].ToString());
                     reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                     reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.CO2 = Convert.ToInt32(reader["avg(CO2)"]);
                     reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
                     reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
                     reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
@@ -328,6 +335,7 @@ public class ReadingController : ControllerBase
                     reportDataResponse.Timestamp = (reader["days"].ToString());
                     reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                     reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.CO2 = Convert.ToInt32(reader["avg(CO2)"]);
                     reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
                     reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
                     reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
@@ -371,6 +379,7 @@ public class ReadingController : ControllerBase
                     reportDataResponse.Timestamp = (reader["days"].ToString());
                     reportDataResponse.Temp = Convert.ToInt32(reader["avg(Temp)"]);
                     reportDataResponse.Humidity = Convert.ToInt32(reader["avg(Humidity)"]);
+                    reportDataResponse.CO2 = Convert.ToInt32(reader["avg(CO2)"]);
                     reportDataResponse.VOC = Convert.ToInt32(reader["avg(VOC)"]);
                     reportDataResponse.PM2_5 = Convert.ToInt32(reader["avg(PM2_5)"]);
                     reportDataResponse.PM_10 = Convert.ToInt32(reader["avg(PM_10)"]);
@@ -388,7 +397,7 @@ public class ReadingController : ControllerBase
     }
 
     [HttpGet("SentReadData")]
-    public async Task<IActionResult> SentReadData(int Temp, int Humidity, int VOC, int PM2_5, int PM_10, int DeviceID)
+    public async Task<IActionResult> SentReadData(int Temp, int Humidity, int CO2, int VOC, int PM2_5, int PM_10, int DeviceID)
     {
         string latestID = "";
         using (MySqlConnection connection = new MySqlConnection(sQLConection.strConnection))
@@ -437,6 +446,7 @@ public class ReadingController : ControllerBase
             cmd.Parameters.Add("_Timestamp", MySqlDbType.DateTime).Value = DateTime.UtcNow;
             cmd.Parameters.Add("_Temp", MySqlDbType.Int32).Value = Temp;
             cmd.Parameters.Add("_Humidity", MySqlDbType.Int32).Value = Humidity;
+            cmd.Parameters.Add("_CO2", MySqlDbType.Int32).Value = CO2;
             cmd.Parameters.Add("_VOC", MySqlDbType.Int32).Value = VOC;
             cmd.Parameters.Add("_PM2_5", MySqlDbType.Int32).Value = PM2_5;
             cmd.Parameters.Add("_PM_10", MySqlDbType.Int32).Value = PM_10;
@@ -455,6 +465,7 @@ public class ReadingController : ControllerBase
                     readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                     readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                     readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.CO2 = Convert.ToInt32(reader["CO2"]);
                     readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
                     readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
                     readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
@@ -562,6 +573,7 @@ public class ReadingController : ControllerBase
                     readingResponse.Timestamp = DateTime.Parse(reader["Timestamp"].ToString());
                     readingResponse.Temp = Convert.ToInt32(reader["Temp"]);
                     readingResponse.Humidity = Convert.ToInt32(reader["Humidity"]);
+                    readingResponse.CO2 = Convert.ToInt32(reader["CO2"]);
                     readingResponse.VOC = Convert.ToInt32(reader["VOC"]);
                     readingResponse.PM2_5 = Convert.ToInt32(reader["PM2_5"]);
                     readingResponse.PM_10 = Convert.ToInt32(reader["PM_10"]);
@@ -636,6 +648,7 @@ public class ReadingController : ControllerBase
                             readingResponse.Timestamp = DateTime.Parse(reader2["Timestamp"].ToString());
                             readingResponse.Temp = Convert.ToInt32(reader2["Temp"]);
                             readingResponse.Humidity = Convert.ToInt32(reader2["Humidity"]);
+                            readingResponse.CO2 = Convert.ToInt32(reader2["CO2"]);
                             readingResponse.VOC = Convert.ToInt32(reader2["VOC"]);
                             readingResponse.PM2_5 = Convert.ToInt32(reader2["PM2_5"]);
                             readingResponse.PM_10 = Convert.ToInt32(reader2["PM_10"]);
