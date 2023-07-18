@@ -119,7 +119,6 @@ public class IAQController : ControllerBase
             cmd2.Connection = connection;
             cmd2.CommandText = "getLatestIAQ";
             cmd2.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd2.Parameters.Add("_deviceID", MySqlDbType.Int32).Value = _deviceID;
             await connection.OpenAsync();
 
             MySqlDataReader reader2 = cmd2.ExecuteReader();
